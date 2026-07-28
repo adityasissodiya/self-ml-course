@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app">
+    <h1 id="title">Loading…</h1>
+    <label class="handle">Your handle (a-z, 0-9, _ or -):
+      <input id="handle" autocomplete="off" spellcheck="false">
+    </label>
+    <form id="quiz"></form>
+    <button id="submit" type="button">Get my shard</button>
+    <section id="result" hidden>
+      <p>Commit this line to <code id="path"></code>:</p>
+      <pre id="shard"></pre>
+      <button id="copy" type="button">Copy</button>
+      <p class="note">The CI runner validates it server-side and updates the course PDF.</p>
+    </section>
+  </main>
+  <script src="quiz.js"></script>
+</body>
+</html>

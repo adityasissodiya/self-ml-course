@@ -1,0 +1,53 @@
+% AUTHORED
+\section{The perceptron / linear unit}\label{sec:01}
+\conceptbadge{01}
+
+The perceptron is a binary classifier built from one affine score:
+\[
+  s = w^\top x + b.
+\]
+The vector $x$ contains input features, $w$ contains one trainable weight per
+feature, and $b$ is a trainable bias. A hard perceptron turns the score into a
+class prediction with a threshold, for example
+\[
+  \hat{y} =
+  \begin{cases}
+    1 & \text{if } s \ge 0,\\
+    0 & \text{otherwise.}
+  \end{cases}
+\]
+
+\subsection*{The geometry}
+In two dimensions, $w^\top x + b = 0$ is a line. Points on one side are assigned
+class $1$ and points on the other side are assigned class $0$. In three
+dimensions the boundary is a plane; in higher dimensions it is a hyperplane.
+The bias shifts the boundary without changing its orientation, while the weight
+vector controls the direction of the boundary's normal.
+
+\subsection*{Learning from mistakes}
+The classic perceptron update is simple. For labels $y \in \{-1, +1\}$, if the
+model makes a mistake on $(x,y)$, update
+\[
+  w \leftarrow w + \eta yx,
+  \qquad
+  b \leftarrow b + \eta y,
+\]
+where $\eta$ is the learning rate. A positive example that was scored too low
+pushes $w$ toward its features; a negative example that was scored too high
+pushes $w$ away. This is already the basic training pattern: compare a
+prediction with a target, compute a direction, then adjust the parameters by a
+small step.
+
+\subsection*{From perceptrons to neural networks}
+A single linear unit cannot bend its decision boundary, but it remains the core
+operation inside larger networks. A multi-layer perceptron (MLP) is a stack of affine
+maps with nonlinearities between them. Transformer attention also begins with
+linear projections that create queries, keys, and values. The point of learning
+the perceptron is not that it is powerful by itself; it is that the same
+weighted-sum operation is everywhere.
+
+\subsection*{Exercise connection}
+The exercise asks you to implement the perceptron decision rule. Keep it small:
+convert inputs to arrays, compute $w^\top x + b$, and return the class implied
+by the sign of the score. Later modules replace the hard threshold with smooth
+losses and gradients.

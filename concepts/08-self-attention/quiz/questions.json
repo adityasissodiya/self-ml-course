@@ -1,0 +1,59 @@
+{
+  "module_id": "08",
+  "salt": "d421a277cc8d044e54b52e1f2aa72f12",
+  "course_prefix": "DLX",
+  "authored": true,
+  "title": "Scaled dot-product self-attention",
+  "questions": [
+    {
+      "id": "q01",
+      "text": "In attention, queries, keys, and values are used so that:",
+      "options": {
+        "a": "keys are sampled as output tokens",
+        "b": "queries replace the loss function",
+        "c": "queries compare to keys to weight the values",
+        "d": "values decide the learning rate"
+      }
+    },
+    {
+      "id": "q02",
+      "text": "Scaled dot-product attention divides QK^T by:",
+      "options": {
+        "a": "sqrt(d_k)",
+        "b": "the batch size squared",
+        "c": "the vocabulary size",
+        "d": "the number of training examples"
+      }
+    },
+    {
+      "id": "q03",
+      "text": "After the row-wise softmax, each row of the attention matrix:",
+      "options": {
+        "a": "contains only integers",
+        "b": "is always all zeros",
+        "c": "has the same value in every column",
+        "d": "sums to one"
+      }
+    },
+    {
+      "id": "q04",
+      "text": "For a single sequence of length T, QK^T has shape:",
+      "options": {
+        "a": "(d_k, d_k)",
+        "b": "(T, T)",
+        "c": "(V, T)",
+        "d": "(batch, vocab)"
+      }
+    },
+    {
+      "id": "q05",
+      "text": "The attention output AV contains:",
+      "options": {
+        "a": "the original token IDs",
+        "b": "only the keys",
+        "c": "weighted sums of value vectors",
+        "d": "the optimizer state"
+      }
+    }
+  ]
+}

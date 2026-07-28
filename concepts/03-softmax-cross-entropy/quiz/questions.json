@@ -1,0 +1,59 @@
+{
+  "module_id": "03",
+  "salt": "5303e7c76d7561b7ec76a0f40329f422",
+  "course_prefix": "DLX",
+  "authored": true,
+  "title": "Softmax, cross-entropy, and the output-layer gradient",
+  "questions": [
+    {
+      "id": "q01",
+      "text": "softmax(z)_i is proportional to:",
+      "options": {
+        "a": "z_i",
+        "b": "exp(z_i)",
+        "c": "log(z_i)",
+        "d": "1 / z_i"
+      }
+    },
+    {
+      "id": "q02",
+      "text": "Why subtract max(z) before exponentiating in softmax?",
+      "options": {
+        "a": "to make it run faster",
+        "b": "numerical stability \u2014 to avoid overflow of exp on large logits",
+        "c": "it shifts the resulting distribution in a useful way",
+        "d": "to force the outputs to sum to 1"
+      }
+    },
+    {
+      "id": "q03",
+      "text": "With a one-hot target y and p = softmax(logits), the gradient of cross-entropy with respect to the logits is:",
+      "options": {
+        "a": "p",
+        "b": "y - p",
+        "c": "p - y",
+        "d": "log(p) - y"
+      }
+    },
+    {
+      "id": "q04",
+      "text": "Cross-entropy against a one-hot target reduces to:",
+      "options": {
+        "a": "the squared error between p and y",
+        "b": "the negative log-probability assigned to the correct class",
+        "c": "the entropy of the predicted distribution p",
+        "d": "the KL divergence from p to the uniform distribution"
+      }
+    },
+    {
+      "id": "q05",
+      "text": "For a constant c, softmax(z + c) equals:",
+      "options": {
+        "a": "softmax(z), unchanged",
+        "b": "softmax(z) + c",
+        "c": "c \u00b7 softmax(z)",
+        "d": "undefined"
+      }
+    }
+  ]
+}

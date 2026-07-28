@@ -1,0 +1,90 @@
+% AUTHORED
+\section{Math \& tooling prerequisites}\label{sec:00}
+\noindent\textbf{Setup module, no quiz shard.}
+
+This course uses a small amount of linear algebra, calculus, probability, and
+Python tooling over and over. The goal is not to make the notation impressive;
+the goal is to keep every model component easy to inspect. When a later
+milestone says a tensor has shape $B \times T \times C$, you should know what
+each letter means. $B$ is the batch size. $T$ is the number of time steps. $C$
+is the channel (or feature) dimension carried at each token position.
+
+The course builds GPT (Generative Pre-trained Transformer) in four passes.
+First, you learn the notation and
+training mechanics that every later module reuses. Then you build trainable
+neural-network primitives: linear layers, nonlinearities, losses, gradients, and
+optimizers. After that, you add sequence primitives: token embeddings,
+self-attention, causal masking, multiple heads, and position information.
+Finally, you assemble those pieces into a decoder-only language model that can
+train on next-token prediction and sample new text.
+
+\subsection*{Vectors, matrices, and shapes}
+A vector is an ordered list of numbers. A matrix is a rectangular table of
+numbers. A linear layer usually computes
+\[
+  Y = XW + b,
+\]
+where $X \in \mathbb{R}^{B \times d_{\text{in}}}$ contains a batch of examples,
+$W \in \mathbb{R}^{d_{\text{in}} \times d_{\text{out}}}$ contains trainable
+weights, $b \in \mathbb{R}^{d_{\text{out}}}$ is broadcast across the batch, and
+$Y \in \mathbb{R}^{B \times d_{\text{out}}}$ is the result. Most bugs in this
+course are shape bugs, so write shapes next to new formulas before you write
+code.
+
+\subsection*{Derivatives and the chain rule}
+Training means changing parameters to reduce a scalar loss $L$. A derivative
+tells you how a small change in one number changes another number. For a
+composition $L=f(g(x))$, the chain rule says
+\[
+  \frac{dL}{dx} = \frac{dL}{dg}\frac{dg}{dx}.
+\]
+Backpropagation is the chain rule applied systematically to every operation in
+a computation graph. You will first do this by hand for simple networks, then
+encode it in the autograd milestone.
+
+\subsection*{Probability and log loss}
+A language model predicts a probability distribution over the next token. A
+distribution has nonnegative entries that sum to one. The loss used throughout
+the course is negative log-likelihood: if the correct next token has probability
+$p$, the loss is $-\log p$. This heavily penalizes confident wrong predictions
+and rewards placing probability mass on the observed token.
+
+\subsection*{Numerical habits}
+Floating-point numbers have limits. Large exponentials overflow; tiny
+probabilities can underflow; subtracting nearly equal values can lose precision.
+Three later techniques follow the same idea: the stable softmax (concept 03),
+gradient clipping (optimization), and careful masking (attention). In each case
+the goal is the same: keep the mathematical result correct while computing it in
+a range the machine can represent.
+
+\subsection*{Tooling loop}
+Use the repository the way you would use a lab notebook. Read the module, run
+the small exercise, take the quiz, then advance the project tests. The concept
+exercises are small, self-contained numpy tasks. The project track is cumulative and lives under
+\texttt{project/dlgpt}. The fastest way to learn is to run tests frequently and
+inspect intermediate shapes rather than writing a large block of code at once.
+Concept 00 is setup-only, concepts 01--13 have quiz shards, and P0--P9 are the
+cumulative project milestones.
+
+\subsection*{Project milestones (P0--P9)}
+Later modules refer to numbered project milestones. They build on one another in
+order, each reusing the concept named in parentheses:
+\begin{itemize}
+  \item \textbf{P0} -- Bootstrap: character tokenizer and batch loader (provided, already written).
+  \item \textbf{P1} -- Autograd engine (concept 05).
+  \item \textbf{P2} -- Neural-network primitives: linear layer, activation, loss, optimizers (concepts 03, 04, 06).
+  \item \textbf{P3} -- Embeddings and a character language-model baseline (concept 07).
+  \item \textbf{P4} -- Single-head self-attention (concept 08).
+  \item \textbf{P5} -- Causal masking (concept 09).
+  \item \textbf{P6} -- Multi-head attention (concept 10).
+  \item \textbf{P7} -- Positional encoding (concept 11).
+  \item \textbf{P8} -- Transformer block (concept 12).
+  \item \textbf{P9} -- Decoder-only GPT and sampling (concept 13).
+\end{itemize}
+Only P0 comes already written; you build P1--P9 by making their failing tests pass.
+
+\medskip
+\noindent\textit{Go deeper:} Goodfellow, Bengio \& Courville, \emph{Deep
+Learning}, Ch.~2--4 (\texttt{https://www.deeplearningbook.org}) covers the
+linear-algebra, probability, and numerical-computation background this course
+relies on.

@@ -1,0 +1,59 @@
+{
+  "module_id": "13",
+  "salt": "42145de0df0774cbffde90151126d1d4",
+  "course_prefix": "DLX",
+  "authored": true,
+  "title": "Decoder-only LM head + sampling",
+  "questions": [
+    {
+      "id": "q01",
+      "text": "The language-model head maps each final hidden state to:",
+      "options": {
+        "a": "a new training corpus",
+        "b": "only a causal mask",
+        "c": "logits over the vocabulary for the next token",
+        "d": "a fixed answer key"
+      }
+    },
+    {
+      "id": "q02",
+      "text": "In next-token training, the target sequence is usually:",
+      "options": {
+        "a": "the input sequence shifted one token to the left",
+        "b": "the input sequence sorted alphabetically",
+        "c": "all zeros",
+        "d": "the position IDs only"
+      }
+    },
+    {
+      "id": "q03",
+      "text": "Temperature sampling changes logits so that:",
+      "options": {
+        "a": "temperature has no effect",
+        "b": "all tokens become equally likely for any temperature",
+        "c": "the model can see future tokens",
+        "d": "lower temperature sharpens and higher temperature flattens the distribution"
+      }
+    },
+    {
+      "id": "q04",
+      "text": "Top-k sampling means:",
+      "options": {
+        "a": "training on only k examples",
+        "b": "sampling only from the k highest-probability tokens",
+        "c": "using k causal masks at once",
+        "d": "deleting the output projection"
+      }
+    },
+    {
+      "id": "q05",
+      "text": "During autoregressive generation, each chosen token is:",
+      "options": {
+        "a": "discarded before the next model call",
+        "b": "used only to update the optimizer",
+        "c": "appended to the context for the next prediction",
+        "d": "treated as a new vocabulary"
+      }
+    }
+  ]
+}

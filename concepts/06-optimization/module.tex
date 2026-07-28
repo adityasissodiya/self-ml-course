@@ -1,0 +1,56 @@
+% AUTHORED
+\section{Gradient descent, SGD, Adam}\label{sec:06}
+\conceptbadge{06}
+
+Gradients tell you a local direction in parameter space. Optimization decides
+how far to move. For parameters $\theta$ and loss $L$, vanilla gradient descent
+updates
+\[
+  \theta \leftarrow \theta - \eta \nabla_\theta L,
+\]
+where $\eta$ is the learning rate. The minus sign matters: the gradient points
+toward the steepest local increase, so training moves in the opposite direction.
+
+\subsection*{Mini-batches}
+The exact gradient over a full dataset can be expensive. Stochastic gradient
+descent (SGD) estimates it from one example or a mini-batch. A mini-batch
+gradient is noisy, but it is much cheaper, and the noise can help optimization
+move out of poor local minima. In language modeling, each batch contains many
+short token sequences, and each position contributes a next-token loss.
+
+\subsection*{Learning rate}
+The learning rate is the most important optimizer hyperparameter. If it is
+too small, training is very slow. If it is too large, the loss can oscillate or
+diverge. Practical
+training often uses schedules: warm up early steps, decay later steps, or lower
+the rate when validation loss stops improving.
+
+\subsection*{Momentum and Adam}
+Momentum keeps an exponential moving average of recent gradients and uses it as
+velocity. Adam keeps two moving averages: one for gradients and one for squared
+gradients. The second moment rescales updates so parameters with consistently
+large gradients take smaller effective steps. Adam is a common default for
+transformers because it is robust across many parameter groups and scales.
+
+\subsection*{Training loop discipline}
+A minimal loop has the same shape throughout the course:
+\begin{enumerate}
+  \item sample a mini-batch;
+  \item run the forward pass;
+  \item compute the loss;
+  \item clear old gradients;
+  \item run backward;
+  \item update parameters.
+\end{enumerate}
+Gradients accumulate by design in autograd systems, so clearing them is not
+optional. Evaluation uses the same forward pass but no parameter update.
+
+\subsection*{Exercise connection}
+The exercise isolates the simplest update, \texttt{params - lr * grads}. P2
+will expand that idea into optimizer classes that update all trainable
+parameters in the project.
+
+\medskip
+\noindent\textit{Go deeper:} Goodfellow, Bengio \& Courville, \emph{Deep
+Learning}, Ch.~8 (\texttt{https://www.deeplearningbook.org}) covers optimization
+for deep models, including momentum and Adam.

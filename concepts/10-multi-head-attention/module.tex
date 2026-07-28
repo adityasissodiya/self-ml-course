@@ -1,0 +1,47 @@
+% AUTHORED
+\section{Multi-head attention}\label{sec:10}
+\conceptbadge{10}
+
+A single attention head computes one set of query-key matches and one weighted
+sum of values. Multi-head attention repeats that operation several times with
+different learned projections. The outputs are concatenated and mixed with a
+final linear projection.
+
+\subsection*{Why multiple heads?}
+One head has one similarity space. Multiple heads allow the model to attend to
+different kinds of information at the same time: nearby syntax, repeated names,
+delimiter structure, or longer-range dependencies. The heads are not told what
+to specialize in; specialization emerges because each head has separate
+projection matrices and receives gradients through the loss.
+
+\subsection*{Shapes}
+Let the model width be $C$ (the channel dimension $C$ from \S00) and the
+number of heads be $h$. A common choice is the per-head key/query width
+$d_k = C/h$. For each head $r$, with input $X \in \mathbb{R}^{B \times T \times C}$
+from the previous block,
+\[
+  Q_r = XW^Q_r,\qquad K_r = XW^K_r,\qquad V_r = XW^V_r,
+\]
+then
+\[
+  O_r = \operatorname{softmax}\left(\frac{Q_rK_r^\top}{\sqrt{d_k}}\right)V_r.
+\]
+The head outputs $O_1,\dots,O_h$ are concatenated along the channel dimension,
+returning to width $C$, and an output projection mixes information across heads:
+\[
+  O = \operatorname{concat}(O_1,\dots,O_h)W_O.
+\]
+
+\subsection*{Cost and capacity}
+Using $h$ heads does not necessarily multiply the channel width, because each
+head usually uses a smaller internal dimension. The total attention score cost
+still scales with sequence length squared. More heads increase representational
+flexibility, but too many tiny heads can become inefficient or underpowered.
+
+\subsection*{Decoder setting}
+In a decoder-only GPT, every head is causal. The same lower-triangular mask from
+concept 09 applies inside each head before softmax. P6 builds the multi-head
+wrapper around the attention function you already implemented, and P8 places it
+inside a full transformer block. Multi-head attention still assumes that each
+token vector already carries information about where it appears in the sequence;
+the next module adds that missing position signal.

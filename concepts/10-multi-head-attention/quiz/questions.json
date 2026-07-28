@@ -1,0 +1,59 @@
+{
+  "module_id": "10",
+  "salt": "608086c26009079a53a473594683e76d",
+  "course_prefix": "DLX",
+  "authored": true,
+  "title": "Multi-head attention",
+  "questions": [
+    {
+      "id": "q01",
+      "text": "The main purpose of multiple attention heads is to:",
+      "options": {
+        "a": "remove the value vectors",
+        "b": "make the sequence length equal the vocabulary size",
+        "c": "let different heads attend in different learned subspaces",
+        "d": "disable causal masking"
+      }
+    },
+    {
+      "id": "q02",
+      "text": "A multi-head attention layer typically:",
+      "options": {
+        "a": "projects into heads, applies attention per head, concatenates, then projects",
+        "b": "runs softmax only once over the vocabulary",
+        "c": "uses one fixed random mask for all data",
+        "d": "replaces token embeddings with labels"
+      }
+    },
+    {
+      "id": "q03",
+      "text": "If model width is C and there are h heads, each head often uses width:",
+      "options": {
+        "a": "C * h",
+        "b": "the batch size",
+        "c": "the vocabulary size",
+        "d": "C / h"
+      }
+    },
+    {
+      "id": "q04",
+      "text": "Head outputs are concatenated along the:",
+      "options": {
+        "a": "training-example axis only",
+        "b": "channel or feature dimension",
+        "c": "answer-key string",
+        "d": "optimizer timestep"
+      }
+    },
+    {
+      "id": "q05",
+      "text": "The output projection after concatenation is useful because it:",
+      "options": {
+        "a": "prevents any gradients from reaching the heads",
+        "b": "turns logits into token IDs",
+        "c": "mixes information from different heads",
+        "d": "removes the residual connection requirement"
+      }
+    }
+  ]
+}

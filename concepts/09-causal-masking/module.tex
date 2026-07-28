@@ -1,0 +1,62 @@
+% AUTHORED
+\section{Causal masking}\label{sec:09}
+\conceptbadge{09}
+
+Autoregressive language modeling predicts the next token from previous tokens.
+When training on a full sequence, the model sees all token embeddings at once
+for efficiency. Causal masking enforces the correct constraint on that parallel computation:
+position $i$ may attend only to positions $j \le i$.
+
+\subsection*{The leakage problem}
+Suppose the sequence is
+\[
+  x_0, x_1, x_2, \dots, x_T.
+\]
+At position $i$, the model is trained to predict $x_{i+1}$. If its attention
+layer can read position $i+1$ or later, the answer is directly available in the
+input. Training loss would look good while generation would fail, because at
+generation time future tokens do not exist yet.
+
+\subsection*{The mask}
+For a length-$T$ sequence, the allowed attention pattern is lower triangular:
+\[
+  M_{ij} =
+  \begin{cases}
+    1 & \text{if } j \le i,\\
+    0 & \text{if } j > i.
+  \end{cases}
+\]
+In implementation, the mask is applied to attention logits before softmax. A
+forbidden score is replaced with a very negative number, often written as
+$-\infty$:
+\[
+  S_{ij} =
+  \begin{cases}
+    S_{ij} & \text{if } j \le i,\\
+    -\infty & \text{if } j > i.
+  \end{cases}
+\]
+Softmax turns those forbidden positions into probability zero.
+
+\subsection*{No-leakage test}
+A good causal attention implementation has a simple behavioral property: if you
+change tokens after position $i$, the output at position $i$ must not change.
+Later positions may depend on earlier ones, but earlier positions cannot depend
+on later ones. This is exactly the property P5 checks.
+
+\subsection*{Training and generation}
+During training, causal masking lets the model process every position in a
+sequence in parallel. During generation, the same model is called repeatedly:
+feed the current context, sample or choose the next token, append it, and repeat.
+The mask ensures the training computation matches that future-blind generation
+setting.
+
+\subsection*{Exercise connection}
+The exercise focuses on the mask operation itself. Apply the mask before
+softmax, not after; masking probabilities after softmax breaks normalization
+unless you renormalize.
+
+\medskip
+\noindent\textit{Go deeper:} Karpathy's \texttt{nanoGPT}
+(\texttt{https://github.com/karpathy/nanoGPT}) applies this same
+lower-triangular causal mask inside its attention implementation.

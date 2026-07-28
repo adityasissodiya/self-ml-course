@@ -1,0 +1,59 @@
+{
+  "module_id": "09",
+  "salt": "8818f6e6c4239e1d30dcbf0d8611d048",
+  "course_prefix": "DLX",
+  "authored": true,
+  "title": "Causal masking",
+  "questions": [
+    {
+      "id": "q01",
+      "text": "A causal mask is used to:",
+      "options": {
+        "a": "hide padding only after generation is complete",
+        "b": "prevent each position from attending to future tokens",
+        "c": "make every attention row uniform",
+        "d": "remove the need for token embeddings"
+      }
+    },
+    {
+      "id": "q02",
+      "text": "For position i, which key positions j should be masked in a decoder?",
+      "options": {
+        "a": "all j less than i",
+        "b": "only j equal to i",
+        "c": "no positions",
+        "d": "all j greater than i"
+      }
+    },
+    {
+      "id": "q03",
+      "text": "The usual way to apply an attention mask is to:",
+      "options": {
+        "a": "set forbidden logits to a very negative value before softmax",
+        "b": "delete the value matrix",
+        "c": "add future tokens to the target",
+        "d": "multiply the loss by zero"
+      }
+    },
+    {
+      "id": "q04",
+      "text": "Causal masking is required for:",
+      "options": {
+        "a": "ordinary matrix multiplication",
+        "b": "turning characters into integers",
+        "c": "autoregressive next-token training",
+        "d": "making embeddings trainable"
+      }
+    },
+    {
+      "id": "q05",
+      "text": "A no-leakage test checks that changing future tokens:",
+      "options": {
+        "a": "changes all earlier outputs",
+        "b": "does not change earlier masked outputs",
+        "c": "sets the learning rate to zero",
+        "d": "removes the vocabulary"
+      }
+    }
+  ]
+}

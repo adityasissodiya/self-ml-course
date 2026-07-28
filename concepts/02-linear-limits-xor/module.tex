@@ -1,0 +1,56 @@
+% AUTHORED
+\section{Limits of linearity (XOR)}\label{sec:02}
+\conceptbadge{02}
+
+The perceptron draws one straight decision boundary. That works only when the
+classes are linearly separable. XOR exposes the limit. For two binary inputs,
+XOR returns $1$ when exactly one input is $1$:
+\[
+\begin{array}{ccc}
+ x_1 & x_2 & y\\
+ 0 & 0 & 0\\
+ 0 & 1 & 1\\
+ 1 & 0 & 1\\
+ 1 & 1 & 0
+\end{array}
+\]
+The positive examples sit on opposite corners of the unit square. No single
+line can put both positive corners on one side while keeping both negative
+corners on the other side.
+
+\subsection*{More linear layers are not enough}
+Suppose you stack two affine maps but use no nonlinearity:
+\[
+  h = xW_1 + b_1,
+  \qquad
+  y = hW_2 + b_2.
+\]
+Substitute the first equation into the second:
+\[
+  y = x(W_1W_2) + (b_1W_2 + b_2).
+\]
+The composition is still just another affine map. No matter how many linear
+layers you stack, without a nonlinearity the whole network collapses to one
+linear layer.
+
+\subsection*{Hidden features}
+A nonlinear hidden layer can divide the input space into regions, and a
+final linear unit can then combine those regions. For XOR, one hidden unit can detect
+whether at least one input is active, while another can detect whether both are
+active. A final unit can combine those features as
+\[
+  \text{at-least-one} - \text{both}.
+\]
+This is the core idea of representation learning: the early layers do not merely
+classify; they transform the data into features where classification is simpler.
+
+\subsection*{Why this matters later}
+The transformer's feed-forward network is an MLP applied at every token
+position. Attention mixes information across positions, but the MLP supplies
+per-token nonlinear feature transformation. The XOR example is tiny, yet it
+captures the reason that nonlinearity is not optional.
+
+\subsection*{Exercise connection}
+The exercise gives you a small two-layer network skeleton for XOR. You are not
+training it yet; the point is to see how a hidden representation can make a
+problem linearly separable for the output unit.

@@ -1,0 +1,59 @@
+% AUTHORED
+\section{Decoder-only LM head + sampling}\label{sec:13}
+\conceptbadge{13}
+
+The decoder stack produces a hidden vector for every position. The language
+model head maps each vector to logits over the vocabulary:
+\[
+  Z_{b,t,:} = H_{b,t,:}W_{\text{out}} + b_{\text{out}}.
+\]
+If the vocabulary size is $V$, then $Z$ has shape $B \times T \times V$. The
+softmax-cross-entropy loss from concept 03 compares each row of logits with the
+next token target.
+
+\subsection*{Shifted targets}
+For token IDs
+\[
+  x_0, x_1, \dots, x_T,
+\]
+the model input might be $x_0,\dots,x_{T-1}$ and the target might be
+$x_1,\dots,x_T$. Position $t$ predicts the next token $x_{t+1}$. Causal masking
+ensures the hidden state at $t$ was computed without seeing that target token.
+
+\subsection*{Training objective}
+The batch loss is the average negative log-probability assigned to the correct
+next token:
+\[
+  L = -\frac{1}{BT}\sum_{b,t}\log p_{b,t,y_{b,t}}.
+\]
+Backpropagation sends gradients through the LM head, transformer blocks,
+position embeddings, and token embeddings. Lower loss means the model assigns
+more probability to observed next tokens in the training data.
+
+\subsection*{Sampling}
+Generation starts from a prompt. Repeatedly run the model on the current
+context, take the logits at the last position, convert them to probabilities,
+choose a next token, append it, and repeat. Greedy decoding chooses the highest
+probability token. Temperature rescales logits before softmax:
+\[
+  z' = z / \tau.
+\]
+Lower $\tau$ makes the distribution sharper; higher $\tau$ makes it flatter.
+Top-$k$ sampling keeps only the $k$ most likely tokens before sampling, which
+limits very low-probability choices while preserving variety.
+
+\subsection*{Context window}
+A decoder-only model has a maximum context length. During generation, if the
+prompt plus generated tokens grows past that limit, feed only the most recent
+context window. The model cannot directly attend to tokens outside its window.
+
+\subsection*{Project endpoint}
+P9 assembles the full path: token IDs to embeddings, positions, stacked causal
+transformer blocks, final logits, cross-entropy training, and a sampling loop.
+At that point the repository contains a small decoder-only GPT built from the
+pieces introduced throughout the course.
+
+\medskip
+\noindent\textit{Go deeper:} Karpathy's \texttt{nanoGPT}
+(\texttt{https://github.com/karpathy/nanoGPT}) assembles the decoder-only LM
+head, training loop, and sampling into a complete, runnable GPT.

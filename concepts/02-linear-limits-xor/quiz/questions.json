@@ -1,0 +1,59 @@
+{
+  "module_id": "02",
+  "salt": "5e53f8ec566e9257620e14f02b627c58",
+  "course_prefix": "DLX",
+  "authored": true,
+  "title": "Limits of linearity (XOR)",
+  "questions": [
+    {
+      "id": "q01",
+      "text": "The XOR pattern is important because it is:",
+      "options": {
+        "a": "solved perfectly by any single linear boundary",
+        "b": "a regression problem with no labels",
+        "c": "not linearly separable",
+        "d": "only defined for continuous inputs"
+      }
+    },
+    {
+      "id": "q02",
+      "text": "Why can a single perceptron not solve XOR?",
+      "options": {
+        "a": "no single straight boundary separates the positive and negative corners",
+        "b": "the inputs have too many dimensions",
+        "c": "the output is always zero",
+        "d": "the bias term is forbidden"
+      }
+    },
+    {
+      "id": "q03",
+      "text": "What does a nonlinear hidden layer add?",
+      "options": {
+        "a": "only a larger learning rate",
+        "b": "a guarantee that training cannot fail",
+        "c": "the ability to avoid matrices",
+        "d": "features that can make the final separation easier"
+      }
+    },
+    {
+      "id": "q04",
+      "text": "Which is an example of a nonlinearity used between linear layers?",
+      "options": {
+        "a": "matrix multiplication",
+        "b": "ReLU",
+        "c": "adding a bias",
+        "d": "copying the input"
+      }
+    },
+    {
+      "id": "q05",
+      "text": "A stack of affine layers with no nonlinearities is equivalent to:",
+      "options": {
+        "a": "one affine layer",
+        "b": "a recurrent network",
+        "c": "a probability distribution",
+        "d": "a causal attention mask"
+      }
+    }
+  ]
+}

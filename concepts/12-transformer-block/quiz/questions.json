@@ -1,0 +1,59 @@
+{
+  "module_id": "12",
+  "salt": "d744b02d79eecef6a90281177aad4048",
+  "course_prefix": "DLX",
+  "authored": true,
+  "title": "Transformer block (residual + LayerNorm + FFN)",
+  "questions": [
+    {
+      "id": "q01",
+      "text": "A residual connection does what?",
+      "options": {
+        "a": "adds a sublayer's input to its output",
+        "b": "turns token IDs into strings",
+        "c": "removes all nonlinearities",
+        "d": "sorts the batch by length"
+      }
+    },
+    {
+      "id": "q02",
+      "text": "LayerNorm in a transformer block usually normalizes:",
+      "options": {
+        "a": "across the entire dataset",
+        "b": "only the vocabulary entries",
+        "c": "features within each token representation",
+        "d": "the answer keys"
+      }
+    },
+    {
+      "id": "q03",
+      "text": "The feed-forward network inside a transformer block is applied:",
+      "options": {
+        "a": "only to the final token of each sequence",
+        "b": "independently to each token position",
+        "c": "only before tokenization",
+        "d": "instead of the loss"
+      }
+    },
+    {
+      "id": "q04",
+      "text": "Residual paths help deep networks mainly by:",
+      "options": {
+        "a": "making every layer random",
+        "b": "removing the need for gradients",
+        "c": "forcing all outputs to be one-hot",
+        "d": "preserving information and improving gradient flow"
+      }
+    },
+    {
+      "id": "q05",
+      "text": "A transformer block typically preserves:",
+      "options": {
+        "a": "the raw text file exactly",
+        "b": "only the batch size, not the sequence",
+        "c": "sequence length and model width",
+        "d": "the optimizer state as logits"
+      }
+    }
+  ]
+}

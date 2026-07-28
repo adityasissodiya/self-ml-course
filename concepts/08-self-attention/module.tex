@@ -1,0 +1,53 @@
+% AUTHORED
+\section{Scaled dot-product self-attention}\label{sec:08}
+\conceptbadge{08}
+
+Self-attention lets each token decide which other tokens are relevant to its
+next representation. Starting from token vectors $X$, learned linear projections
+produce queries, keys, and values:
+\[
+  Q = XW_Q,\qquad K = XW_K,\qquad V = XW_V.
+\]
+A query asks what a token is looking for. A key describes what a token offers for
+matching. A value is the information to be mixed if the match is strong.
+
+\subsection*{Scores and weights}
+For a sequence of length $T$ and key/query width $d_k$, the raw attention scores
+are
+\[
+  S = \frac{QK^\top}{\sqrt{d_k}},
+\]
+with shape $T \times T$ for one sequence. Row $i$ contains how strongly token
+$i$ attends to every token $j$. Applying softmax row by row gives attention
+weights:
+\[
+  A_{ij} = \frac{\exp(S_{ij})}{\sum_{\ell=1}^{T}\exp(S_{i\ell})}.
+\]
+Each row of $A$ sums to one, so each output token receives a convex weighted
+summary of value vectors:
+\[
+  O = AV.
+\]
+
+\subsection*{Why the scale is there}
+If query and key components have roughly unit variance, their dot product grows
+in variance with $d_k$. Large dot products make softmax very sharp, which can
+produce tiny gradients early in training. Dividing by $\sqrt{d_k}$ keeps scores
+in a more stable range.
+
+\subsection*{Self-attention versus recurrence}
+Self-attention compares all token positions in parallel. It does not need to
+process tokens one at a time as an RNN would. The cost is the $T \times T$ score
+matrix, which becomes expensive for long context lengths. In this course the
+contexts are small, so clarity matters more than optimization.
+
+\subsection*{What is still missing}
+Plain self-attention allows every token to read every other token, including
+future positions. That is fine for some encoders but wrong for autoregressive
+language modeling. Concept 09 adds the causal mask so position $t$ can only use
+positions $\le t$.
+
+\subsection*{Exercise connection}
+The exercise implements the unmasked formula
+$\operatorname{softmax}(QK^\top/\sqrt{d_k})V$. P4 then integrates the same
+operation into the cumulative language model.

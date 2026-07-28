@@ -1,0 +1,56 @@
+% AUTHORED
+\section{Transformer block (residual + LayerNorm + FFN)}\label{sec:12}
+\conceptbadge{12}
+
+A decoder-only transformer is a stack of repeated blocks. Each block keeps the
+same shape, usually $B \times T \times C$, so blocks can be composed. Inside the
+block, causal multi-head attention mixes information across token positions,
+and a feed-forward network transforms each token's channel vector.
+
+\subsection*{Residual connections}
+A residual connection adds a sublayer's input to its output:
+\[
+  x \leftarrow x + \operatorname{sublayer}(x).
+\]
+This gives the model an easy identity path. If a sublayer is not useful yet, the
+network can learn a small change rather than a complete replacement. Residuals
+also improve gradient flow through deep stacks.
+
+\subsection*{Layer normalization}
+LayerNorm normalizes the features of each token independently:
+\[
+  \operatorname{LayerNorm}(x)
+  =
+  \gamma \frac{x-\mu}{\sqrt{\sigma^2+\epsilon}} + \beta,
+\]
+where $\mu$ and $\sigma^2$ are computed across the channel dimension for one
+token, and $\gamma,\beta$ are learned scale and shift parameters. LayerNorm
+stabilizes the distribution of activations as they pass through many blocks.
+
+\subsection*{Pre-norm block}
+Many GPT-style implementations use pre-norm:
+\[
+  x \leftarrow x + \operatorname{MHA}(\operatorname{LN}(x)),
+\]
+\[
+  x \leftarrow x + \operatorname{FFN}(\operatorname{LN}(x)).
+\]
+The feed-forward network is typically a two-layer MLP with an activation in the
+middle. It is applied independently at every token position, so attention mixes
+tokens and the FFN mixes channels.
+
+\subsection*{Stacking depth}
+One block gives the model one round of communication and transformation.
+Stacking blocks lets information move through several attention patterns and
+nonlinear feature transformations. The output shape remains $B \times T \times
+C$ until the final language-model head maps channels to vocabulary logits.
+
+\subsection*{Project connection}
+P8 combines earlier milestones: embeddings and positions feed a causal
+multi-head attention module, residual paths wrap attention and the FFN, and
+LayerNorm keeps the stack trainable.
+
+\medskip
+\noindent\textit{Go deeper:} Karpathy's \texttt{nanoGPT}
+(\texttt{https://github.com/karpathy/nanoGPT}) implements the pre-norm
+transformer block (residual paths, LayerNorm, and FFN) described here.

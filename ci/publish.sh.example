@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# Fill in and rename to publish.sh on the server. Do NOT commit real credentials.
+NEXTCLOUD_URL="https://cloud.example.org/remote.php/dav/files/USER/course/main.pdf"
+NEXTCLOUD_USER="USER"
+NEXTCLOUD_PASS="APP_PASSWORD"   # use a Nextcloud app password, not the login password
+curl -fsS -u "$NEXTCLOUD_USER:$NEXTCLOUD_PASS" -T ../tex/main.pdf "$NEXTCLOUD_URL"

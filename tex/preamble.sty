@@ -1,0 +1,52 @@
+% GENERATED
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{preamble}[2026/06/22 v1.1 dlgpt course preamble]
+
+\RequirePackage{xcolor}
+\RequirePackage{booktabs}
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{pgffor}
+\RequirePackage{xfp}
+
+\definecolor{badgedone}{HTML}{3DDC84}
+\definecolor{badgetodo}{HTML}{9AA0AA}
+\definecolor{dlgptaccent}{HTML}{7C5CFF}
+
+% --- internal completion store -------------------------------------------- %
+\newcounter{dlgptdone}
+\setcounter{dlgptdone}{0}
+\newcommand{\dlgptrows}{}
+
+% \moduledone{handle}{NN}{date}: record one completion.
+\newcommand{\moduledone}[3]{%
+  \expandafter\gdef\csname dlgptdone@#2\endcsname{1}%
+  \stepcounter{dlgptdone}%
+  \g@addto@macro\dlgptrows{#1 & #2 & #3 \\}%
+}
+
+% \conceptbadge{NN}: tick if a completion was recorded for NN, else circle.
+\newcommand{\conceptbadge}[1]{%
+  \ifcsname dlgptdone@#1\endcsname
+    \colorbox{badgedone}{\textcolor{white}{\textbf{#1~\checkmark}}}%
+  \else
+    \colorbox{badgetodo}{\textcolor{white}{\textbf{#1~\ensuremath{\circ}}}}%
+  \fi
+}
+
+% \progressdashboard: table of quiz completions + count / percentage.
+\newcommand{\progressdashboard}{%
+  \begin{center}
+  \begin{tabular}{lll}
+  \toprule
+  \textbf{Handle} & \textbf{Module} & \textbf{Date} \\
+  \midrule
+  \dlgptrows
+  \bottomrule
+  \end{tabular}
+  \end{center}
+  \begin{center}
+  Completed \thedlgptdone{} of 13 quiz modules
+  (\fpeval{round(100*\thedlgptdone/13,0)}\%).
+  \end{center}
+}

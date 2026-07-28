@@ -1,0 +1,58 @@
+% AUTHORED
+\section{Multi-layer perceptron}\label{sec:04}
+\conceptbadge{04}
+
+A multi-layer perceptron (MLP) is a stack of dense layers separated by nonlinear
+activation functions. A two-layer version can be written as
+\[
+  H = \phi(XW_1 + b_1),
+  \qquad
+  Y = HW_2 + b_2,
+\]
+where $\phi$ might be ReLU, tanh, or GELU. The hidden matrix $H$ is a learned
+representation of the input.
+
+\subsection*{The role of the activation}
+Concept 02 showed that linear layers alone collapse into one linear layer. The
+activation prevents that collapse. ReLU is the simplest common example:
+\[
+  \operatorname{ReLU}(x) = \max(0,x).
+\]
+It keeps positive values and zeroes negative values. This piecewise-linear bend
+is enough to let a network form decision regions that a single linear unit
+cannot.
+
+\subsection*{Batched shapes}
+For a batch $X \in \mathbb{R}^{B \times d_{\text{in}}}$ and hidden width
+$d_{\text{hid}}$, the first layer parameters have shapes
+\[
+  W_1 \in \mathbb{R}^{d_{\text{in}} \times d_{\text{hid}}},
+  \qquad
+  b_1 \in \mathbb{R}^{d_{\text{hid}}}.
+\]
+The hidden activations have shape $B \times d_{\text{hid}}$. If the output
+dimension is $d_{\text{out}}$, then
+$W_2 \in \mathbb{R}^{d_{\text{hid}} \times d_{\text{out}}}$ and
+$Y \in \mathbb{R}^{B \times d_{\text{out}}}$. Writing these shapes before
+coding avoids most dense-layer bugs.
+
+\subsection*{Features, not just labels}
+Hidden units learn features useful for the loss. In a classifier those features
+help separate classes. In a language model they become token-level
+representations that support next-token prediction. The MLP inside a transformer
+does not mix tokens; it transforms each token's channel vector independently,
+which complements attention's token-mixing role.
+
+\subsection*{Training}
+The forward pass produces logits, the loss measures the error, and backprop
+computes gradients for every weight and bias. In P2 you will turn the pieces
+into reusable primitives: linear layers, activations, losses, and optimizers.
+The module exercise isolates just the forward computation of an affine layer
+plus ReLU so the shape mechanics are solid before gradients are added.
+
+\medskip
+\noindent\textit{Go deeper:} Goodfellow, Bengio \& Courville, \emph{Deep
+Learning}, Ch.~6 (\texttt{https://www.deeplearningbook.org}) develops
+feed-forward networks in depth; Karpathy's \texttt{makemore}
+(\texttt{https://github.com/karpathy/makemore}) builds an MLP language model
+step by step.

@@ -1,0 +1,59 @@
+{
+  "module_id": "06",
+  "salt": "51cc790052649009e94eb9b3f15b4096",
+  "course_prefix": "DLX",
+  "authored": true,
+  "title": "Gradient descent, SGD, Adam",
+  "questions": [
+    {
+      "id": "q01",
+      "text": "The basic gradient-descent update is:",
+      "options": {
+        "a": "theta <- theta - learning_rate * gradient",
+        "b": "theta <- theta + loss",
+        "c": "theta <- gradient - theta",
+        "d": "theta <- theta / batch_size only"
+      }
+    },
+    {
+      "id": "q02",
+      "text": "A mini-batch gradient is useful because it is:",
+      "options": {
+        "a": "always identical to the full-dataset gradient",
+        "b": "computed without data",
+        "c": "cheaper than the full gradient, though noisier",
+        "d": "only used at inference time"
+      }
+    },
+    {
+      "id": "q03",
+      "text": "Adam keeps moving averages of:",
+      "options": {
+        "a": "tokens and vocabulary strings",
+        "b": "gradients and squared gradients",
+        "c": "only the model outputs",
+        "d": "only validation accuracies"
+      }
+    },
+    {
+      "id": "q04",
+      "text": "Why do training loops clear gradients before a new backward pass?",
+      "options": {
+        "a": "to erase the parameters",
+        "b": "to disable learning",
+        "c": "to make the batch smaller",
+        "d": "because gradients accumulate by default"
+      }
+    },
+    {
+      "id": "q05",
+      "text": "Validation loss is mainly used to:",
+      "options": {
+        "a": "check generalization on data not used for updates",
+        "b": "replace the training loss inside backprop",
+        "c": "choose the next token during sampling",
+        "d": "store the tokenizer vocabulary"
+      }
+    }
+  ]
+}
