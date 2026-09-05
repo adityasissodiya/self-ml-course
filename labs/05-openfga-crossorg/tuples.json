@@ -1,0 +1,10 @@
+{
+  "writes": {
+    "tuple_keys": [
+      {"user": "organization:manufacturer", "relation": "owner", "object": "passport:battery-001"},
+      {"user": "user:alice", "relation": "member", "object": "organization:manufacturer"},
+      {"user": "agent:recycler-tool", "relation": "reader", "object": "passport:battery-001"}
+    ]
+  }
+}
+

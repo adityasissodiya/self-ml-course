@@ -1,0 +1,8 @@
+{
+  "hops": [
+    {"from": "user:aditya", "to": "agent:org-a/orchestrator", "issuer": "as:org-a", "audience": "agent:org-a/orchestrator", "scopes": ["passport:read", "passport:delegate"], "audit_id": "evt-001"},
+    {"from": "agent:org-a/orchestrator", "to": "agent:org-b/tool", "issuer": "as:org-b", "audience": "agent:org-b/tool", "scopes": ["passport:read"], "audit_id": "evt-002"},
+    {"from": "agent:org-b/tool", "to": "service:dpp-backend", "issuer": "as:org-b", "audience": "service:dpp-backend", "scopes": ["passport:read"], "audit_id": "evt-003"}
+  ]
+}
+
