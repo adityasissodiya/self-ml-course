@@ -20,5 +20,4 @@ Update the relevant `research/gaps/GNN.md`, the index, and `research/concurrent-
 
 ## Verification and dates
 
-Run `make check-links`, `make hours`, and `make status`. Update `Last verified` only in files actually checked. Do not remove unresolved caveats. Do not cite the IBM/Ponemon 92% or 97% figures without the methodology caveat in the same paragraph or table row.
-
+Run `make check-links`, `make hours`, and `make status`. Update `Last verified` only in files actually checked. Do not remove unresolved caveats. Do not cite IBM/Ponemon access-control statistics without the methodology caveat in the same paragraph or table row.

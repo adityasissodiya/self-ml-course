@@ -87,8 +87,8 @@ def check_one(item):
             error = str(exc)
         else:
             error = str(exc)
-    if meta["gated"] and status in {401, 403, "—"}:
-        verdict = "GATED (expected)"
+    if meta["gated"]:
+        verdict = "GATED (landing reachable)" if isinstance(status, int) and status < 400 else "GATED (expected)"
     elif meta["institutional"] and status in {401, 403}:
         verdict = "INST (expected)"
     elif meta["unverified"] and (status == "—" or (isinstance(status, int) and status >= 400)):

@@ -36,7 +36,8 @@ ILOs 4, 7, and 8.
 | Resource | Provider | Access | Cost | Link | Which parts |
 |---|---|---|---|---|---|
 | WASP Graduate School | WASP | FREE-ACCT | No listed fee; check eligibility | https://wasp-sweden.org/graduate-school/ | Check cross-crediting only |
-| Cybercampus graduate school | Cybercampus Sverige | FREE-ACCT | No listed fee; check eligibility | https://www.cybercampus.se/en/research/cybercampus-graduate | Check complementary courses |
+| Cybercampus graduate school | Cybercampus Sverige | FREE-ACCT | No listed fee; check eligibility | https://www.cybercampus.se/en/research/cybercampus-graduate | ⚠️ UNVERIFIED — TLS verification failed on 2026-09-05; check complementary courses |
+| WASP-HS courses | WASP-HS | FREE-ACCT | No listed fee; check eligibility | https://wasp-hs.org/courses/ | Societal and ethical component |
 
 ## Exercise
 
@@ -63,4 +64,3 @@ ILOs 4, 7, and 8.
 - [ ] Can WASP or Cybercampus work be cross-credited?
 
 ## Notes
-

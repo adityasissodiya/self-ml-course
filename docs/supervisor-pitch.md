@@ -39,5 +39,4 @@ The 200-hour budget allocates 70 h to primary reading, 24 h to seminars, 16 h to
 - Confirm the fourth supervisor's full name and affiliation (“Chiquito”).
 - Decide formal LTU kursplan versus documented directed reading.
 - Check WASP/Cybercampus cross-crediting before duplicating credit.
-- Obtain the gated IBM 2026 report before using its 92% figure even as motivation.
-
+- Obtain the gated IBM 2026 report before using its reported access-control statistic even as motivation.

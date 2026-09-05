@@ -31,7 +31,7 @@ ILOs 3, 4, 6, and 7.
 | # | Item | Tier | Access | Link | Notes |
 |---|---|---|---|---|---|
 | 1 | [BG] Take-grant analysis, preprint | [A] | FREE | https://arxiv.org/abs/1208.0108 | Supporting review; check publication status before citing |
-| 2 | [BG] Li and Tripunitara trust-management security analysis | [A] | INST | https://doi.org/10.1007/978-3-540-30597-6_8 | Decidable fragments; verify exact edition via LTU |
+| 2 | [BG] Li and Tripunitara trust-management security analysis | [A] | INST | ⚠️ UNVERIFIED — exact source record must be resolved through LTU | Decidable fragments; the proposal does not supply a stable URL |
 
 ## Courses / lectures embedded here
 
@@ -60,4 +60,3 @@ ILOs 3, 4, 6, and 7.
 - [ ] Does runtime composition or revocation force the model outside known decidable fragments?
 
 ## Notes
-

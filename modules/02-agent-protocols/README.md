@@ -22,11 +22,15 @@ ILOs 1, 2, 4, and 7.
 
 | # | Item | Tier | Access | Link | Notes |
 |---|---|---|---|---|---|
-| 1 | [LB] MCP Authorization specification, 2025-06-18 | [B] | FREE | https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization | Resource-server model, RFC 9728/8707, PKCE |
+| 1 | [LB] MCP Authorization specification, 2025-06-18 | [B] | FREE | https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization | ⚠️ UNVERIFIED — TLS handshake timed out on 2026-09-05; resource-server model, RFC 9728/8707, PKCE |
 | 2 | [LB] MCP repository | [B] | FREE | https://github.com/modelcontextprotocol | Compare auth revisions and read an auth issue |
 | 3 | [LB] A2A protocol and signed Agent Cards | [B] | FREE | https://a2a-protocol.org | Identity does not establish authority |
 | 4 | [LB] A2A repository | [B] | FREE | https://github.com/a2aproject/A2A | Primary implementation/spec source |
 | 5 | [LB] *Governance Gaps in Agent Interoperability Protocols*, preprint | [A] | FREE | https://arxiv.org/abs/2606.31498 | Anchor critique; pre-peer-review |
+| 6 | [LB] RFC 8707 — Resource Indicators | [B] | FREE | https://www.rfc-editor.org/info/rfc8707/ | Audience/resource binding required by MCP |
+| 7 | [LB] RFC 9728 — Protected Resource Metadata | [B] | FREE | https://www.rfc-editor.org/info/rfc9728/ | MCP resource-server discovery |
+| 8 | [LB] RFC 8414 — Authorization Server Metadata | [B] | FREE | https://www.rfc-editor.org/info/rfc8414/ | Authorization-server discovery |
+| 9 | [LB] RFC 7591 — Dynamic Client Registration | [B] | FREE | https://www.rfc-editor.org/info/rfc7591/ | Client registration baseline |
 
 ## Background reading
 
@@ -62,4 +66,3 @@ ILOs 1, 2, 4, and 7.
 - [ ] Where should governance live: protocol, policy overlay, or registry?
 
 ## Notes
-

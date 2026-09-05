@@ -32,6 +32,8 @@ ILOs 4, 5, 7, and 8.
 |---|---|---|---|---|---|
 | 1 | [BG] AAGATE governance platform, preprint | [A] | FREE | https://arxiv.org/abs/2510.25863 | NIST-RMF/MAESTRO mapping; pre-peer-review |
 | 2 | [BG] Zero-trust critique of MAESTRO, preprint | [A] | FREE | https://arxiv.org/abs/2508.12259 | Notes lack of mathematical formalism; pre-peer-review |
+| 3 | [BG] Kiteworks, “92% of AI Breaches Had Zero Access Controls” | [C] | FREE | https://kiteworks.substack.com/p/92-of-ai-breaches-had-zero-access | Use: motivation only — not citable as evidence. Vendor-authored secondary trace to a vendor-sponsored, self-reported Ponemon convenience panel of breached organizations; “proper AI access controls” is not operationalized, IBM is a security vendor, and the 2026 primary report is gated. |
+| 4 | [BG] IBM Cost of a Data Breach | [C] | GATED | https://www.ibm.com/reports/data-breach | Use: motivation only — not citable as evidence. Vendor-sponsored, self-reported Ponemon convenience panel of breached organizations; “proper AI access controls” is not operationalized, IBM is a security vendor, and the 2026 primary report requires registration. |
 
 ## Courses / lectures embedded here
 
@@ -61,4 +63,3 @@ ILOs 4, 5, 7, and 8.
 - [ ] Which checklist entries can be given formal authorization semantics?
 
 ## Notes
-

@@ -39,6 +39,8 @@ ILOs 2, 4, 6, and 7.
 | 1 | [BG] AI agents with DIDs/VCs, preprint | [A] | FREE | https://arxiv.org/abs/2511.02841 | Pre-peer-review |
 | 2 | [BG] OAuth identity-chaining draft search | [B] | FREE | https://datatracker.ietf.org/doc/draft-ietf-oauth-identity-chaining/ | Current status must be rechecked before citation |
 | 3 | [BG] OAuth attenuating agent tokens draft search | [B] | FREE | https://datatracker.ietf.org/doc/draft-niyikiza-oauth-attenuating-agent-tokens/ | Unadopted status is evidence for G3; recheck |
+| 4 | [BG] AI agent authorization draft | [B] | FREE | https://datatracker.ietf.org/doc/draft-klrc-aiagent-auth/ | WIMSE + OAuth approach; recheck adoption/status |
+| 5 | [BG] WIMSE transaction tokens draft | [B] | FREE | https://datatracker.ietf.org/doc/draft-ietf-wimse-workload-identity-bcp/ | Current transaction-token document must be resolved from the WG page |
 
 ## Courses / lectures embedded here
 
@@ -67,4 +69,3 @@ ILOs 2, 4, 6, and 7.
 - [ ] When is SPIFFE sufficient, and when is full delegation provenance required?
 
 ## Notes
-
