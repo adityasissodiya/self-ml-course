@@ -1,0 +1,60 @@
+\documentclass[10pt]{article}
+\input{../../common/activity-preamble.tex}
+
+\begin{document}
+\sheet{Workshop 3 activity: write a benchmark case}{Pairs, 30 minutes. Agentic AI Security, Identity, and Access Control.}
+
+\textbf{Goal.} Find a situation where you expect the strictest design (B3) to make the wrong decision, write it as a case, and run all four designs on it.
+
+\textbf{Ground truth used by the benchmark.} Allow only if Alice is authorized for the field at the moment of the request, the field and passport are in the delegated task, the caller is the delegated agent, and nothing was revoked or expired; or if the emergency rule applies. If you disagree with this rule, say so in the case's \texttt{note}.
+
+\medskip
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Key} & \textbf{Values} \\
+\midrule
+\texttt{id} & a short unique name \\
+\texttt{category} & authorized, unauthorized, over-privilege, confused-deputy, cross-tenant, replay, token-theft, revocation, expiry \\
+\texttt{expected} & \texttt{allow} or \texttt{deny} \\
+\texttt{as} & who makes the request: alice, carol, mallory, orchestrator, xrf, harvester, incident \\
+\texttt{creds} & delegated (the lab agent's credentials), hop1, direct (Alice's own), emergency, untrusted \\
+\texttt{fields} & any of identity, materials, health, repair, suppliers \\
+\texttt{passport} & battery-001 (default) or battery-002 \\
+\texttt{events} & before the request: revoke-origin, revoke-by-issuer, leave-org, advance:SECONDS \\
+\texttt{repeat}, \texttt{spacing} & repeat the request, with seconds between attempts \\
+\texttt{agent\_plan} & \texttt{true}: the scripted agent reads the passport notes and chooses the fields itself \\
+\texttt{note} & anything the reader should know, including a disagreement with the ground truth \\
+\bottomrule
+\end{tabularx}
+
+\bigskip
+\textbf{1. Your case}
+
+\renewcommand{\arraystretch}{2.4}
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Situation in one sentence & \\
+\texttt{as} / \texttt{creds} / \texttt{fields} & \\
+\texttt{events} & \\
+Expected, and why & \\
+\bottomrule
+\end{tabularx}
+\renewcommand{\arraystretch}{1}
+
+\bigskip
+\textbf{2. Run it.} Add it to \texttt{experiments/my\_cases.json}, then \texttt{python e3\_benchmark.py -{}-cases my\_cases.json}.
+
+\smallskip
+\begin{tabular}{@{}l c c c c@{}}
+\toprule
+Design & B0 & B1 & B2 & B3 \\
+\midrule
+Correct? & \blank[1cm] & \blank[1cm] & \blank[1cm] & \blank[1cm] \\
+\bottomrule
+\end{tabular}
+
+\bigskip
+\textbf{3. If B3 is wrong:} is the design wrong, or the ground truth? What would you change?\par\vspace{6mm}\blank[\textwidth]
+
+\vspace{6mm}\blank[\textwidth]
+\end{document}

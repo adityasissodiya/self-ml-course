@@ -1,97 +1,85 @@
 # Agentic AI Security, Identity, and Access Control
 
-This 7.5 ECTS doctoral course workspace is organized around a paper artifact: a systematization of cross-organizational agent delegation, sharpened by an executable OpenFGA/SPIFFE DPP case and a purpose-built access-control evaluation protocol. It is simultaneously a syllabus, working lab, and research tracker for Aditya Sissodiya's PhD work at Luleå University of Technology.
+A 7.5 ECTS doctoral course at Luleå University of Technology, examined through three workshops in which I present what I have learned to my supervisors and peers. This repository holds everything behind those workshops: reading notes, a Python simulation of the problem, the experiments that produce every result shown, the LaTeX slides, and a log of the preparation.
 
-| Credits | Hours logged | Modules complete | Artifact | Last verified |
-|---:|---:|---:|---|---|
-| 7.5 ECTS | 0 / 200 | 0 / 8 | Scoping — G2+G1 with G7 | 2026-09-05 |
+**The question running through the course:** when an AI agent acts for a person, and hands part of the job to another organization's agent, who is authorized to do what, and how would anyone check?
 
-## TL;DR
+## The three workshops
 
-- Scope this as a gap-finding SoK, not a survey: agent-to-agent delegation is the transitive, cross-organizational authorization problem at the center of the existing thesis line, and there is no standardized benchmark for agent access-control enforcement.
-- The empirical hook is real but grey: the reported 92%/97% figures come from a vendor-sponsored, self-reported Ponemon convenience panel of 600 breached organizations; “proper AI access controls” is not operationalized, IBM is a security vendor, and the 2026 primary report is gated. Use the figures only as motivation, never as evidence for a mechanism's necessity or efficacy.
-- Produce a concrete artifact for a concrete venue: default to G2+G1 with a DPP/G7 instantiation, while tracking SaTML, EuroS&P, SACMAT, and SaT-CPS calls.
+| | Workshop | Question | Hours | Date |
+|---:|---|---|---:|---|
+| 1 | [Where authority leaks](workshops/w1-where-authority-leaks/) | What do MCP and A2A say about who is authorized, and where does authority escape in a two-organization delegation chain? | 70 | TBD |
+| 2 | [Can deployed policy express it?](workshops/w2-can-policy-express-it/) | Which delegation requirements can relationship-based access control and capabilities state and enforce? | 70 | TBD |
+| 3 | [Can we prove it and measure it?](workshops/w3-prove-and-measure/) | Can a delegation design be shown safe, and how would we measure one? | 60 | TBD |
 
-## Why this course
+Each workshop README gives its learning outcomes, agenda, readings, experiments, hands-on activity, the two discussions I lead, and its examination checklist. The [syllabus](docs/syllabus.md) has the course learning outcomes and the examination criteria. The [workshop format](workshops/README.md) describes how a session runs.
 
-Agentic AI collapses the classical distinction between the principal who is authorized and the process that acts. MCP and A2A standardize discovery and calls but leave cross-organizational authority, attenuation, revocation, and stakeholder consent largely to implementers. This is a direct extension of multi-stakeholder access control for DPP, circular-economy, and public-safety systems. IBM/Kiteworks reporting that 92% of AI-related incidents lacked “proper AI access controls,” following a reported 97% in 2025, is only an industry hook: the figures derive from a vendor-sponsored, self-reported Ponemon convenience panel of breached organizations, the construct is not operationalized, IBM is a security vendor, and the gated 2026 primary report has not been obtained; they are motivation only, not evidence.
+## Quick start
 
-## How this repo is organized
+You need Python 3.10 or newer. Building the slides also needs a TeX Live installation with `latexmk`, `biber`, and the Beamer `metropolis` theme.
 
-| Directory/file | Purpose |
+```text
+python tasks.py test        # unit tests for the simulator
+python tasks.py run w1      # run Workshop 1's experiments; results go to workshops/w1-*/results/
+python tasks.py slides w1   # build the draft deck to build/w1/w1.pdf
+python tasks.py build       # all of the above, for all workshops, plus activity sheets
+python tasks.py dossier     # preparation evidence per workshop, written to build/dossier.md
+```
+
+Everything except the slides and activity sheets is Python, and the simulator uses only the standard library.
+
+## How the preparation is shown
+
+The examiners want to see the work that went into each workshop, not only the talk. The repository records it as it happens:
+
+| Evidence | Where | How it is produced |
+|---|---|---|
+| Reading notes | `workshops/wN-*/notes/R*.md` | `python tasks.py note R1.7` starts one from a template. A note is complete when no `TODO` is left. |
+| Preparation log | `workshops/wN-*/log.md` | `python tasks.py log w1 1.5 reading "..."` adds a dated row with hours and output. |
+| Rehearsals | the same `log.md` | `python tasks.py rehearsal w1 40 "audience" "feedback" "changes"` |
+| Results from code | `workshops/wN-*/experiments/` | Every table and plot on a results slide is written by an experiment and pulled in with `\result{}`. None is typed by hand. |
+| Open checks | `\prep{...}` in the decks | Amber boxes mark claims not yet checked against a source. The final build refuses while any remain. |
+| Summary | `build/dossier.md` and the last slide of each deck | `python tasks.py dossier` totals hours against budget and counts finished notes, rehearsals, open checks, and whether results are current. |
+| History | git | Small, dated commits. |
+
+## The simulation
+
+[`agentsim/`](agentsim/) mocks the systems the course is about, so that each claim can be demonstrated rather than asserted. Nothing touches a network.
+
+| Module | Mocks |
 |---|---|
-| [PROPOSAL.md](PROPOSAL.md) | Unmodified source report and governing content |
-| [docs/](docs/) | Syllabus, evidence policy, workload log, and printable supervisor pitch |
-| [modules/](modules/) | Eight consistent learning modules with checkable exercises |
-| [research/gaps/](research/gaps/) | Prioritized G01–G10 research-gap tracker |
-| [research/artifact/](research/artifact/) | Contribution claim, outline, and paper working area |
-| [bibliography/](bibliography/) | Tier-preserving BibTeX and arXiv completeness inventory |
-| [labs/](labs/) | Runnable MCP, delegation, OpenFGA/SPIFFE, and evaluation work |
-| [scripts/](scripts/) | Link, workload, status, and reading-maintenance tools |
+| `authz.py` | An OAuth authorization server: metadata (RFC 8414), dynamic registration (RFC 7591), PKCE (RFC 7636), audience (RFC 8707), token exchange with `act` (RFC 8693), introspection, revocation |
+| `server.py` | An MCP server for a Digital Product Passport registry, acting as an OAuth resource server (RFC 9728), with switchable enforcement policies |
+| `identity.py`, `a2a.py` | SPIFFE-style workload identity and signed A2A Agent Cards |
+| `rebac.py` | A Zanzibar-style relationship store with conditions and `explain()` |
+| `capability.py` | Macaroon-style capabilities with chained HMAC caveats |
+| `agents.py` | A scripted, deliberately gullible tool agent standing in for an LLM |
+| `world.py`, `dpp.py` | The running scenario: a recycler, a lab, a manufacturer, a regulator, and a broker acting as adversary, plus four enforcement designs B0–B3 |
+| `safety.py`, `bench.py` | A state-space safety checker and an access-control benchmark with explicit ground truth |
 
-## Module map
+The simulation shows how the problem behaves. It is not a measurement of real systems: costs come from assumed latencies, and the agent is a script.
 
-| # | Module | Focus | Est. hours | Exercise output | Status |
-|---:|---|---|---:|---|---|
-| 00 | [Orientation](modules/00-orientation/) | Approval, scope, evidence, setup | 5 | Stage 0 decision record | Not started |
-| 01 | [Agentic foundations](modules/01-agentic-foundations/) | Architecture and authority boundaries | 20 | Scenario classification | Not started |
-| 02 | [Agent protocols](modules/02-agent-protocols/) | MCP/A2A authorization delta | 25 | Two-page delta memo | Not started |
-| 03 | [Identity and delegation](modules/03-identity-and-delegation/) | Workload vs on-behalf-of identity | 30 | Credential-chain diagram | Not started |
-| 04 | [Threat models](modules/04-threat-models/) | MAESTRO, ASI, authorization failures | 25 | Public-safety threat table | Not started |
-| 05 | [Policy and enforcement](modules/05-policy-and-enforcement/) | ReBAC, capabilities, attenuation | 40 | OpenFGA DPP limitation experiment | Not started |
-| 06 | [Formal methods](modules/06-formal-methods/) | Safety and decidable fragments | 25 | Safety-property analysis | Not started |
-| 07 | [Evaluation](modules/07-evaluation-and-measurement/) | Benchmark and measurement design | 30 | Evaluation protocol | Not started |
+## Repository layout
 
-## Navigation for three audiences
+| Path | Contents |
+|---|---|
+| [workshops/](workshops/) | One folder per workshop (README, `slides/`, `experiments/`, `activity/`, `notes/`, `log.md`) and `common/` for the shared Beamer preamble and scenario figure |
+| [agentsim/](agentsim/) | The simulator |
+| [tests/](tests/) | Unit tests for the behaviour the slides rely on |
+| [docs/](docs/) | [Syllabus and examination](docs/syllabus.md), [evidence policy](docs/evidence-policy.md) |
+| [bibliography/](bibliography/) | BibTeX for every cited source, tagged by tier and workshop |
+| [scripts/check_links.py](scripts/check_links.py) | Link checker (`python tasks.py links`) |
+| [tasks.py](tasks.py) | The task runner for everything above |
 
-### Supervisor reviewing the proposal
-
-- Start with the [two-page pitch](docs/supervisor-pitch.md) and [doctoral syllabus](docs/syllabus.md).
-- Inspect the [gap taxonomy](research/gaps/) and [venue tracker](research/venues.md).
-
-### Student working through it
-
-- Begin at [Module 00](modules/00-orientation/) and complete the [workload log](docs/workload-budget.md).
-- Set up the [lab environment](labs/) before the Module 03 threshold.
-
-### Someone who just wants the reading list
-
-- Use the [bibliography](bibliography/), [BibTeX](bibliography/references.bib), and [arXiv triage inventory](bibliography/arxiv-triage.md).
-- Read the [evidence policy](docs/evidence-policy.md) before lifting claims.
-
-## The research spine
-
-The recommended focus is [G02: transitive cross-organizational delegation](research/gaps/G02.md) plus [G01: a standardized access-control benchmark](research/gaps/G01.md), instantiated through [G07: DID/VC-based agent identity for DPP](research/gaps/G07.md). G02 is already under active attack by arXiv 2606.03518 and 2605.05440, so the course must produce a formal, DPP/CPS-specific, or evaluation delta—not another generic ReBAC extension.
-
-## Target venues
-
-The three nearest stated or projected deadlines are:
-
-| Venue | Deadline | Status | Fit |
-|---|---|---|---|
-| IEEE SaTML 2027 | 29 Sep 2026 | Reconfirm official call | Best SoK/agent-security fit |
-| SACMAT 2027 | PROJECTED late 2026 from 2026 cycle | CfP not posted | Most topical access-control venue |
-| IEEE S&P 2027 | PROJECTED ~10 Nov 2026; rolling cycle requires confirmation | Not confirmed | Strong system/formal result |
-
-See the [full venue tracker](research/venues.md). Both NDSS 2027 cycles had closed as of the proposal's 2026-09-05 search date.
-
-## Resource cost summary
-
-| Item | Access | Price | Worth it? | Use |
-|---|---|---:|---|---|
-| [SANS SEC546](https://www.sans.org/cyber-security-courses/securing-agentic-ai) | PAID | ~USD 8–9k | **No.** Do not buy. | Use the public syllabus as an industry gap map only. `[C] [BG]` — motivation only, not citable as evidence. |
-
-No other currently embedded course resource has a listed purchase price. Institutional papers are marked `INST`; Swedish graduate-school options require eligibility checks rather than purchase.
-
-## Open administrative items
-
-- [ ] Confirm the fourth supervisor's full name and affiliation (“Chiquito”).
-- [ ] Decide whether LTU registers this as a formal individual third-cycle kursplan or documented directed reading.
-- [ ] Determine WASP/Cybercampus cross-crediting before duplicating credit.
-- [ ] Obtain the gated IBM 2026 PDF before using its reported access-control statistic even as motivation.
+`build/` and `workshops/*/results/` are generated and not tracked.
 
 ## Conventions
 
-All readings carry evidence tier, priority, and access tags. See the [evidence policy](docs/evidence-policy.md) and [contribution guide](CONTRIBUTING.md). Run `make check-links`, `make hours`, and `make status` before review.
+Every reading carries an evidence tier, a role, and an access tag, and grey literature is used for motivation only; see the [evidence policy](docs/evidence-policy.md). The [working conventions](CONTRIBUTING.md) cover adding readings, experiments, and slides.
 
-On Windows without GNU Make, the equivalent commands are `make.cmd check-links`, `make.cmd hours`, and `make.cmd status`.
+## Open administrative items
+
+- [ ] Set the three workshop dates with the supervisors.
+- [ ] Confirm the fourth supervisor's full name and affiliation ("Chiquito").
+- [ ] Decide whether LTU registers this as a formal individual third-cycle course syllabus (kursplan) or as documented directed reading, and record the agreed examination form there.
+- [ ] Determine WASP/Cybercampus cross-crediting before duplicating credit.

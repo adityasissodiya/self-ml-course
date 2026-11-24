@@ -1,9 +1,0 @@
-[
-  {"id": "allow-owner", "category": "authorized", "chain": ["user:alice"], "scope": "passport:read", "expected": "allow"},
-  {"id": "deny-unknown", "category": "unauthorized", "chain": ["user:mallory"], "scope": "passport:read", "expected": "deny"},
-  {"id": "deny-amplified", "category": "over-privilege", "chain": ["user:alice", "agent:orchestrator", "agent:tool"], "scope": "passport:write", "expected": "deny"},
-  {"id": "deny-deputy", "category": "confused-deputy", "chain": ["user:mallory", "agent:orchestrator"], "scope": "passport:read", "expected": "deny"},
-  {"id": "deny-revoked", "category": "revocation", "chain": ["user:alice", "agent:orchestrator"], "scope": "passport:read", "expected": "deny"},
-  {"id": "measure-latency", "category": "latency", "chain": ["user:alice"], "scope": "passport:read", "expected": "allow"}
-]
-

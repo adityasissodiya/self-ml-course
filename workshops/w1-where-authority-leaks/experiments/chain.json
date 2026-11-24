@@ -1,0 +1,11 @@
+{
+  "_instructions": "Hands-on: replace every '?' for the chain alice -> orchestrator -> xrf-analyzer -> registry, using the identifiers on the activity sheet. Then run: python e3_delegation_chain.py --check chain.json",
+  "hops": [
+    {"from": "user:alice@recycler", "to": "agent:recycler/orchestrator",
+     "issuer": "?", "audience": "?", "actor": null, "scopes": ["?"]},
+    {"from": "agent:recycler/orchestrator", "to": "agent:lab/xrf-analyzer",
+     "issuer": "?", "audience": "?", "actor": "?", "scopes": ["?"]},
+    {"from": "agent:lab/xrf-analyzer", "to": "https://registry.manufacturer.example/mcp",
+     "issuer": "?", "audience": "?", "actor": "?", "scopes": ["?"]}
+  ]
+}

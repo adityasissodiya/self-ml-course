@@ -1,0 +1,276 @@
+\documentclass[aspectratio=169, 10pt]{beamer}
+\input{../../common/preamble.tex}
+
+\title{Where authority leaks}
+\subtitle{Workshop 1 of 3 \textperiodcentered{} Agents, protocols, and identity}
+\date{\prep{set the workshop date}}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Today}
+  \begin{columns}[T]
+    \column{0.57\textwidth}
+    \small
+    \begin{tabular}{@{}l l@{}}
+      0:00 & The question \\
+      0:10 & Talk and live demos (40 min) \\
+      0:50 & Hands-on: build the delegation chain \\
+      1:20 & Break \\
+      1:30 & Discussion 1: where should governance live? \\
+      2:00 & Discussion 2: workload identity or provenance? \\
+      2:30 & Examiner questions \\
+    \end{tabular}
+    \column{0.39\textwidth}
+    \begin{block}{What you need}
+      \small A laptop with Python 3.10+ and a clone of the course repository.
+      Everything runs on the standard library:\\[2pt]
+      {\footnotesize\texttt{python tasks.py run w1}}
+    \end{block}
+  \end{columns}
+  \note{Start the projector demo terminal before the session. Check that results/ is fresh.}
+\end{frame}
+
+\begin{frame}{Learning outcomes for this workshop}
+  \small After this workshop I should be able to show that I can:
+  \begin{enumerate}
+    \item[K1.1] locate the authority boundaries (principal, actor, resource, organization) in a cross-organizational agent workflow, and say when multi-agent is justified;
+    \item[K1.2] describe the MCP authorization flow and the A2A Agent Card model from the normative text;
+    \item[K1.3] distinguish workload identity, on-behalf-of authority, impersonation, and delegation;
+    \item[S1.4] use a simulation to show where authority leaks in a standards-compliant flow;
+    \item[S1.5] list, with sources, the authorization decisions MCP and A2A leave to implementers;
+    \item[J1.6] argue where cross-organizational governance should live, and defend it.
+  \end{enumerate}
+\end{frame}
+
+\section{The question}
+
+\begin{frame}{When an agent acts, who is authorized?}
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+    \textbf{Classical access control}
+    \begin{itemize}\small
+      \item A principal logs in; a process acts with that principal's rights.
+      \item Authority is fixed at session start and checked by one reference monitor.
+    \end{itemize}
+    \column{0.48\textwidth}
+    \textbf{Agentic systems}
+    \begin{itemize}\small
+      \item Every tool call and hand-off passes authority to another component.
+      \item Chains are composed at run time, often across organizations.
+      \item The component that acts may follow instructions it found in data.
+    \end{itemize}
+  \end{columns}
+  \vspace{4mm}
+  \begin{alertblock}{Today's claim}
+    The protocols standardize how to \emph{call} an agent or tool. They leave most of
+    \emph{who may act for whom} to whoever deploys them.
+  \end{alertblock}
+  \note{Industry surveys are sometimes quoted here. Do not quote the IBM/Ponemon figures without the full methodology caveat (vendor-sponsored, self-reported convenience panel, construct not operationalized).}
+\end{frame}
+
+\begin{frame}{Vocabulary for all three workshops}
+  \small
+  \begin{tabularx}{\textwidth}{@{}l X@{}}
+    \toprule
+    \textbf{Principal} & The party whose authority is being exercised (Alice). \\
+    \textbf{Actor} & The component actually making the request (an agent). \\
+    \textbf{Resource} & What is accessed: here, fields of a Digital Product Passport. \\
+    \textbf{Delegation} & Passing some authority to an actor, who acts \emph{as itself, for} the principal. \\
+    \textbf{Impersonation} & The actor acts \emph{as} the principal; the actor disappears from view. \\
+    \textbf{Attenuation} & Narrowing authority when passing it on (fewer fields, shorter life, one purpose). \\
+    \textbf{Revocation} & Withdrawing authority, including anything derived from it. \\
+    \textbf{Workload identity} & Proof of \emph{which software} is calling (SPIFFE), not for whom. \\
+    \bottomrule
+  \end{tabularx}
+\end{frame}
+
+\begin{frame}{The running scenario}
+  \centering
+  \input{../../common/scenario.tex}
+  \vspace{2mm}
+  \begin{itemize}\small
+    \item Alice asks the recycler's orchestrator to analyse battery-001; it hands the job to a third-party lab's XRF agent, which reads the passport from the manufacturer's registry.
+    \item Two hops, three organizations. The broker's agent and the regulator's incident agent appear in Workshops 2 and 3.
+    \item Everything is simulated in \texttt{agentsim}: mock authorization servers, MCP server, SPIFFE attestor, A2A cards. No LLM.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{When is it really multi-agent?}
+  \small
+  \begin{tabularx}{\textwidth}{@{}l l X@{}}
+    \toprule
+    \textbf{Hop} & \textbf{Boundary} & \textbf{What crosses it} \\
+    \midrule
+    1 Alice $\to$ orchestrator & same organization & user authority into a workload \\
+    2 orchestrator $\to$ XRF agent & recycler $\to$ lab & delegated authority to another owner's agent \\
+    3 XRF agent $\to$ registry & lab $\to$ manufacturer & a request against data a third party owns \\
+    \bottomrule
+  \end{tabularx}
+  \vspace{3mm}
+  \begin{itemize}\small
+    \item A single agent with tools would do if every tool were run by the same organization.
+    \item Hop 2 is the real reason for multi-agent here: the lab owns the XRF capability and will not hand it over.
+  \end{itemize}
+  \prep{Add the classification of the DPP, reverse-logistics, and public-safety scenarios from my notes; cite R1.1 (Agent Index) only for claims it actually makes.}
+\end{frame}
+
+\section{What the protocols say}
+
+\begin{frame}{MCP authorization in one slide}
+  \small
+  \begin{itemize}
+    \item The MCP server is an OAuth resource server \ev{B}{mcp_authorization_2025}.
+    \item It advertises its authorization server through protected-resource metadata \ev{B}{rfc_resourcemetadata_2025}; clients discover the server's endpoints \ev{B}{rfc_asmetadata_2018} and may register dynamically \ev{B}{rfc_dynamicregistration_2015}.
+    \item Clients use PKCE \ev{B}{rfc_pkce_2015} and name the target with a resource indicator, so tokens carry an audience \ev{B}{rfc_resourceindicators_2020}.
+    \item The server must check the audience and must not pass a received token through to upstream APIs.
+  \end{itemize}
+  \prep{Quote the exact MUST/SHOULD clauses with section numbers from notes R1.2; re-read the current spec revision before the workshop.}
+\end{frame}
+
+\begin{frame}{Demo E1.1: the flow, step by step}
+  \centering\result{mcp_flow}
+  \note{Run live: python workshops/w1-where-authority-leaks/experiments/e1_mcp_walkthrough.py. Pause on step 10: there is no standard step for a user from another organization. Step 11 succeeds and nobody can say for whom.}
+\end{frame}
+
+\begin{frame}{What the standards fix, and what they leave open}
+  \centering\result{mcp_open}\par
+  \vspace{2mm}
+  {\small Governance-level critiques of the protocols: \ev{A}{governance_gaps_2026}\,\pre.}
+\end{frame}
+
+\begin{frame}{Identity is not authority}
+  \begin{columns}[T]
+    \column{0.55\textwidth}
+    \result{cards}\par
+    \vspace{3mm}
+    \begin{itemize}\scriptsize
+      \item A2A Agent Cards can be signed by the publishing organization \ev{B}{a2a_protocol_2026}.
+      \item SPIFFE SVIDs prove which workload is calling \ev{B}{spiffe_standard_2026}. In the demo, both the lab's and the broker's agents authenticate.
+    \end{itemize}
+    \column{0.41\textwidth}
+    \begin{exampleblock}{A verified card proves}\scriptsize
+      the organization vouches for the description, and it was not altered.
+    \end{exampleblock}
+    \begin{alertblock}{It does not prove}\scriptsize
+      which user the agent acts for, what it may access, or that its advertised skills are honest.
+    \end{alertblock}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Demo E1.2: passing tokens along}
+  \centering\result{passthrough}\par
+  \vspace{3mm}
+  \begin{itemize}\small
+    \item Audience checks stop a token from being used at the wrong server.
+    \item They do not stop a thief who holds a token for the right server: a bearer token works for whoever presents it.
+    \item Binding the token to the caller (here: SVID must match the token's actor) closes that gap. Standard options include DPoP \ev{B}{rfc_dpop_2023} and certificate-bound tokens \ev{B}{rfc_mtls_2020}.
+  \end{itemize}
+\end{frame}
+
+\section{Delegation across organizations}
+
+\begin{frame}{RFC 8693 token exchange}
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+    \textbf{Impersonation}
+    \begin{itemize}\small
+      \item The new token looks as if it had been issued to the subject.
+      \item Downstream services cannot tell an agent was involved.
+    \end{itemize}
+    \column{0.48\textwidth}
+    \textbf{Delegation}
+    \begin{itemize}\small
+      \item An \texttt{act} claim names the current actor; earlier actors nest inside it.
+      \item For access decisions, only the top-level claims and the \emph{current} actor count. Prior actors are informational \ev{B}{rfc_tokenexchange_2020}.
+    \end{itemize}
+  \end{columns}
+  \vspace{3mm}
+  {\small Whether the new token's scope must be narrower is left to the authorization server's policy.}
+  \prep{Check the section number for the "informational only" rule in notes R1.7.}
+\end{frame}
+
+\begin{frame}{Demo E1.3: the chain, delegation mode}
+  \centering\result{chain_hops}\par
+  \vspace{2mm}
+  {\small Each hop's token names the next recipient as audience and the acting agent in \texttt{act}.}
+\end{frame}
+
+\begin{frame}{Four ways to issue the same chain}
+  \centering\result{chain_modes}\par
+  \vspace{2mm}
+  \begin{itemize}\small
+    \item \textbf{Impersonation:} the registry believes Alice is calling. The agents vanish from the record.
+    \item \textbf{Scope copied:} the lab agent can read \emph{health}, which the task never needed.
+    \item \textbf{No narrowing check:} the orchestrator asks for \emph{suppliers}, which Alice never had, and gets it.
+    \item Narrowing is a property of one authorization server's configuration, not of the protocol.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Workload identity or delegation provenance?}
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+    \begin{exampleblock}{Workload identity is enough when}\small
+      \begin{itemize}
+        \item the agent acts for its own organization, on its own authority;
+        \item no human principal needs to appear in the decision or the audit trail.
+      \end{itemize}
+    \end{exampleblock}
+    \column{0.48\textwidth}
+    \begin{alertblock}{Provenance is needed when}\small
+      \begin{itemize}
+        \item the agent acts for a person or another organization;
+        \item authority must shrink, expire, or be revoked along the chain;
+        \item someone must later reconstruct who authorized what.
+      \end{itemize}
+    \end{alertblock}
+  \end{columns}
+  \vspace{2mm}
+  {\small Proposals that bind the two: \ev{A}{aip_delegation_2026}\,\pre, \ev{A}{hdp_provenance_2026}\,\pre; identity landscape: \ev{A}{aiidentity_standards_2026}\,\pre.}
+  \prep{Summarize in one line each what AIP and HDP actually propose, from notes R1.10 and R1.11.}
+\end{frame}
+
+\section{Your turn}
+
+\begin{frame}[fragile]{Hands-on: build the delegation chain (30 min)}
+  \small
+  \begin{enumerate}
+    \item In pairs, fill in the activity sheet: for each hop, the issuer, subject, actor, audience, and scope.
+    \item Copy your answers into \texttt{experiments/chain.json}.
+    \item Run the structural verifier:
+\begin{verbatim}
+python e3_delegation_chain.py --check chain.json
+\end{verbatim}
+    \item Compare with the reference chain from Demo E1.3.
+  \end{enumerate}
+  \begin{block}{Questions to answer}\small
+    Where does Alice's authority stop being visible? Which hop could amplify scope? Who could revoke hop 2?
+  \end{block}
+\end{frame}
+
+\discussion{1}{Where should cross-organizational governance live: in the protocol, in a policy overlay, or in a registry?}
+{MCP authorization \ev{B}{mcp_authorization_2025}; governance gaps in agent interoperability protocols \ev{A}{governance_gaps_2026}\,\pre. \prep{Prepare one argument for and one against each option.}}
+
+\discussion{2}{When is workload identity enough, and when do we need delegation provenance?}
+{RFC 8693 \ev{B}{rfc_tokenexchange_2020}; AIP \ev{A}{aip_delegation_2026}\,\pre; HDP \ev{A}{hdp_provenance_2026}\,\pre. \prep{Prepare the counter-case where provenance is overkill.}}
+
+\begin{frame}{What carries into Workshop 2}
+  \begin{enumerate}
+    \item Authority leaks where the standards are silent: cross-organization users, scope per hop, revocation, audit.
+    \item Signed identity (cards, SVIDs) says who is calling, not what they may do or for whom.
+    \item RFC 8693 can carry the chain, but decisions may use only the current actor.
+  \end{enumerate}
+  \vspace{2mm}
+  \textbf{Next:} can a policy model express ``the lab agent may read materials for Alice, for this task, until she revokes it''?
+\end{frame}
+
+\begin{frame}{How this workshop was prepared}
+  \centering\result{prep_summary}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+  \printbibliography[heading=none]
+\end{frame}
+
+\end{document}

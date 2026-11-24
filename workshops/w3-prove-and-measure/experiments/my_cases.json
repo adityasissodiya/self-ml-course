@@ -1,0 +1,5 @@
+[
+  {"id": "my-case-1", "category": "over-privilege", "expected": "deny", "as": "xrf", "creds": "delegated",
+   "fields": ["repair"],
+   "note": "Example: edit or replace. Run: python e3_benchmark.py --cases my_cases.json"}
+]

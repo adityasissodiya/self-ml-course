@@ -1,0 +1,279 @@
+\documentclass[aspectratio=169, 10pt]{beamer}
+\input{../../common/preamble.tex}
+
+\title{Can we prove it and measure it?}
+\subtitle{Workshop 3 of 3 \textperiodcentered{} Safety analysis, evaluation, and what it all adds up to}
+\date{\prep{set the workshop date}}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Today}
+  \begin{columns}[T]
+    \column{0.57\textwidth}
+    \small
+    \begin{tabular}{@{}l l@{}}
+      0:00 & Where Workshops 1 and 2 left us \\
+      0:10 & Talk and live demos (40 min) \\
+      0:50 & Hands-on: write a benchmark case \\
+      1:20 & Break \\
+      1:30 & Discussion 5: does decidability transfer? \\
+      2:00 & Discussion 6: the smallest valid benchmark \\
+      2:30 & Course synthesis and examiner questions \\
+    \end{tabular}
+    \column{0.39\textwidth}
+    \begin{block}{Run along}
+      \footnotesize\texttt{python tasks.py run w3}\\[2pt]
+      Hands-on: \texttt{my\_cases.json} in \texttt{experiments/}
+    \end{block}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Learning outcomes for this workshop}
+  \small After this workshop I should be able to show that I can:
+  \begin{enumerate}
+    \item[K3.1] explain the safety problem, why it is undecidable in general, and which restrictions make it decidable;
+    \item[S3.2] model a delegation system as states and transitions and check safety properties by exhaustive search, with counterexamples;
+    \item[S3.3] explain, with measured state counts, when a polynomial closure check suffices and when search is needed;
+    \item[S3.4] design an access-control evaluation for agents with explicit ground truth and metrics, and run it on four designs;
+    \item[J3.5] say what existing agent-security benchmarks measure and what they leave out;
+    \item[J3.6] weigh security against utility and cost, state the limits of a simulation, and discuss the societal stakes of delegated authority.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Where we are}
+  \centering{\def\scenarioscale{0.75}\input{../../common/scenario.tex}}
+  \begin{itemize}\small
+    \item W1: the protocols leave cross-organization delegation to implementers; authority leaks at every hop.
+    \item W2: ReBAC bounds the subject now, capabilities bound what was handed on; the hybrid meets six of seven requirements, provenance stays open.
+    \item Today: can a design be shown safe, and how do we measure one?
+  \end{itemize}
+\end{frame}
+
+\section{Proving it}
+
+\begin{frame}{The safety question}
+  \begin{columns}[T]
+    \column{0.55\textwidth}
+    \begin{itemize}\small
+      \item Harrison, Ruzzo, and Ullman model protection as an access matrix changed by commands \ev{A}{harrison_protection_1976}.
+      \item \emph{Safety}: can some right ever leak into a cell where it was not before?
+      \item In general this is undecidable: commands can simulate a Turing machine.
+      \item It becomes decidable under restrictions, for example when every command performs a single primitive operation.
+    \end{itemize}
+    \column{0.4\textwidth}
+    \begin{itemize}\small
+      \item The take-grant model decides whether a right can be shared in linear time \ev{A}{lipton_subject_1977}.
+      \item Security analysis in trust management finds further decidable fragments \ev{A}{li_trustmanagement_2004}.
+      \item A first formal framework for LLM-agent security: \ev{A}{formalizing_agentsecurity_2026}\,\pre.
+    \end{itemize}
+  \end{columns}
+  \prep{Check each claim on this slide against notes R3.1--R3.3, including the exact restriction HRU prove decidable and its complexity. Resolve the Li and Tripunitara source (marked UNVERIFIED).}
+\end{frame}
+
+\begin{frame}{Our delegation system as a transition system}
+  \begin{columns}[T]
+    \column{0.5\textwidth}
+    \small
+    \textbf{State:} consent given?, revoked?, and a set of grants $(\mathit{holder}, \mathit{scope})$.\\[2pt]
+    \textbf{Actions:} the owner consents (to Alice, scopes $S$, organizations $O$); a holder delegates; the owner revokes.\\[4pt]
+    \textbf{Rule sets}
+    \begin{itemize}\scriptsize
+      \item[R0] anyone holding anything may delegate anything
+      \item[R1] delegation must narrow
+      \item[R2] + revocation cascades to derived grants
+      \item[R3] + crossing into an organization needs the owner's consent
+    \end{itemize}
+    \column{0.46\textwidth}
+    \small\textbf{Properties}
+    \begin{itemize}\scriptsize
+      \item[P1] no amplification: every grant's scope is in $S$
+      \item[P2] after revocation, no grant survives
+      \item[P3] every holder belongs to an organization in $O$
+    \end{itemize}
+    \vspace{2mm}
+    \small Instance: Alice and her orchestrator (recycler), the XRF agent (lab), the broker's agent. $S = \{\text{materials}\}$, $O = \{\text{recycler}, \text{lab}\}$.
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Demo E3.1: four rule sets, three properties}
+  \centering\result{safety_rules}\par
+  \vspace{3mm}
+  \result{safety_traces}
+\end{frame}
+
+\begin{frame}{Demo E3.2: what deciding it costs}
+  \begin{columns}[c]
+    \column{0.62\textwidth}
+    \result{growth_plot}
+    \column{0.36\textwidth}
+    \small
+    \begin{itemize}
+      \item With a fixed set of principals the state space is finite, so search \emph{decides} each property, at exponential cost.
+      \item Delegation only adds grants, so P1 and P3 can be decided on the closure: quadratic.
+      \item P2 is about what happens after revocation; it needs search.
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{What this says about agents}
+  \begin{itemize}
+    \item A fixed cast of agents gives a finite, decidable problem. Agents that spawn sub-agents at run time bring back unbounded subject creation, the ingredient of HRU's undecidability.
+    \item Properties that only forbid a bad grant can use cheap closure checks. Properties about revocation, expiry, or ordering need state, and get expensive.
+    \item So a practical design restricts the rules (R3) until the properties it cares about are cheap to check, and checks the rest at run time.
+  \end{itemize}
+  \prep{Mark which of these three points are my inferences and which are established; test the first against R3.3 (formalizing agent security).}
+\end{frame}
+
+\section{Measuring it}
+
+\begin{frame}{What existing benchmarks measure}
+  \scriptsize
+  \begin{tabularx}{\textwidth}{@{}l X c@{}}
+    \toprule
+    \textbf{Benchmark or defense} & \textbf{Measures} & \textbf{Multi-hop delegation ground truth?} \\
+    \midrule
+    AgentDojo \ev{A}{debenedetti_agentdojo_2024} & prompt-injection attacks and task utility for tool-using agents & \xmark \\
+    $\tau$-bench \ev{A}{yao_taubench_2025} & policy adherence in tool-agent-user conversations & \xmark \\
+    ToolEmu \ev{A}{ruan_toolemu_2024} & risky actions, with tools emulated by a language model & \xmark \\
+    AgentHarm \ev{A}{andriushchenko_agentharm_2025} & compliance with harmful agentic requests & \xmark \\
+    Agent Security Bench \ev{A}{zhang_asb_2025} & attacks and defenses across agent scenarios & \xmark \\
+    OpenAgentSafety \ev{A}{vijayvargiya_openagentsafety_2026} & safety in realistic tool environments & \xmark \\
+    Progent, MiniScope, CaMeL \ev{A}{progent_leastprivilege_2025}\ev{A}{miniscope_leastprivilege_2025}\ev{A}{camel_security_2025} & least-privilege or capability defenses, each with its own dataset & \pmark \\
+    \bottomrule
+  \end{tabularx}
+  \prep{Recheck every row against the current releases and my notes R3.4--R3.12. The last column is my reading, not the authors' claim.}
+\end{frame}
+
+\begin{frame}{The evaluation design}
+  \begin{columns}[T]
+    \column{0.5\textwidth}
+    \small\textbf{Ground truth:} allow only if
+    \begin{enumerate}\scriptsize
+      \item Alice is authorized for the field \emph{now};
+      \item the field and passport are in the task;
+      \item the caller is the delegated agent;
+      \item nothing was revoked or expired;
+    \end{enumerate}
+    \small or if the emergency rule applies.\\[3pt]
+    \small\textbf{14 cases in 9 categories}, written in JSON; anyone can add one.
+    \column{0.46\textwidth}
+    \small\textbf{Four designs}
+    \begin{itemize}\scriptsize
+      \item[B0] token passthrough
+      \item[B1] OAuth: audience and scope, RFC 8693 delegation
+      \item[B2] B1 + introspection, workload binding, ReBAC on the agent
+      \item[B3] ReBAC on Alice at decision time + attenuated capability + cascading revocation
+    \end{itemize}
+    \small\textbf{Metrics:} unauthorized allows, false denies, injection contained, calls accepted after revocation, excess authority, simulated decision cost.
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Demo E3.3: results}
+  \centering\result{bench_metrics}\par
+  \vspace{2mm}
+  {\scriptsize Excess authority: non-public (passport, field) pairs the delegated agent can read beyond the one it needs. Cost: simulated from assumed latencies (20 ms per introspection round trip), not measured.}
+\end{frame}
+
+\begin{frame}{Case by case}
+  \begin{columns}[T]
+    \column{0.55\textwidth}
+    \result{bench_matrix}
+    \column{0.42\textwidth}
+    \small
+    \begin{itemize}
+      \item Every design rejects an untrusted issuer and an expired token. B1 adds only passthrough and requests beyond Alice's own rights.
+      \item B2 stops theft and cross-tenant use, but not revocation at Alice's organization or Alice leaving.
+      \item B3 gets every deny right and \alert{fails break-glass}: the strictest design has no emergency path.
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Reading the results honestly}
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+    \textbf{Trade-offs}
+    \begin{itemize}\small
+      \item Security costs round trips: B3 contacts two authorization servers per decision.
+      \item Least privilege fights emergency access. Break-glass needs its own semantics and an audit trail, not a looser policy.
+      \item Revocation across organizations needs a channel the standards do not define.
+    \end{itemize}
+    \column{0.48\textwidth}
+    \textbf{Limits of this evaluation}
+    \begin{itemize}\small
+      \item A simulation with a scripted agent; no LLM, no network.
+      \item Costs are assumptions.
+      \item I wrote the cases \emph{and} the designs: the ground truth may flatter B3.
+      \item 14 cases show the shape of the problem; they are not a benchmark.
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\section{Your turn}
+
+\begin{frame}[fragile]{Hands-on: write a benchmark case (30 min)}
+  \small
+  \begin{enumerate}
+    \item In pairs, find a situation where you expect B3 to be wrong.
+    \item Write it as a case in \texttt{experiments/my\_cases.json} (see the activity sheet for the keys).
+    \item Run all four designs on it:
+\begin{verbatim}
+python e3_benchmark.py --cases my_cases.json
+\end{verbatim}
+    \item If B3 gets it wrong: is the design wrong, or the ground truth?
+  \end{enumerate}
+\end{frame}
+
+\discussion{5}{Do run-time composition and revocation push agent delegation outside the decidable fragments we know?}
+{HRU \ev{A}{harrison_protection_1976}; take-grant \ev{A}{lipton_subject_1977}; formalizing LLM-agent security \ev{A}{formalizing_agentsecurity_2026}\,\pre. \prep{Prepare the strongest argument that it does not.}}
+
+\discussion{6}{What is the smallest benchmark that would be valid for agent access control, and who should write its ground truth?}
+{AgentDojo \ev{A}{debenedetti_agentdojo_2024}; Progent \ev{A}{progent_leastprivilege_2025}\,\pre; MiniScope \ev{A}{miniscope_leastprivilege_2025}\,\pre. \prep{Bring one concrete proposal for who owns the ground truth.}}
+
+\section{What it adds up to}
+
+\begin{frame}{Five things I would tell someone deploying agents across organizations}
+  \begin{enumerate}
+    \item Never pass tokens through. Exchange them, name the actor, and bind the token to the caller.
+    \item Narrow authority to the task at every hop. Copying scope is how injected instructions become data leaks.
+    \item Check the human principal at decision time, not only when the delegation was set up.
+    \item Decide how revocation crosses organizations before the first incident, not after.
+    \item Design the emergency path on purpose, with an audit trail, instead of leaving the strict policy to fail.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Open problems}
+  \small
+  \begin{tabularx}{\textwidth}{@{}l X l@{}}
+    \toprule
+    \textbf{Problem} & \textbf{Why it is open} & \textbf{Seen in} \\
+    \midrule
+    Verifiable provenance & chains are either informational (RFC 8693) or self-asserted (caveats) & W2 R6 \\
+    Cross-organization revocation & no standard channel; derived tokens outlive the origin & W1, W3 \\
+    Break-glass semantics & strict designs deny emergencies; loose ones allow everything & W3 \\
+    Decidable delegation with spawning agents & unbounded subject creation & W3 \\
+    A shared benchmark & each defense brings its own dataset and ground truth & W3 \\
+    Where governance lives & protocol, overlay, or registry & W1 \\
+    \bottomrule
+  \end{tabularx}
+\end{frame}
+
+\begin{frame}{Who carries the risk?}
+  \begin{itemize}
+    \item In public-safety and circular-economy settings, an agent acting on delegated authority can expose commercially sensitive data or delay an emergency response.
+    \item When a delegated agent misuses authority, accountability depends on being able to say who authorized what. Today that record is optional.
+    \item Strict designs move risk from data owners to responders; loose designs move it back.
+  \end{itemize}
+  \prep{Add one concrete case from the public-safety scenario and my position on who should decide the trade-off.}
+\end{frame}
+
+\begin{frame}{How this workshop was prepared}
+  \centering\result{prep_summary}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+  \printbibliography[heading=none]
+\end{frame}
+
+\end{document}

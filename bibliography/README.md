@@ -1,9 +1,12 @@
 # Bibliography
 
-Last verified: 2026-09-05
+Last verified: 2026-11-19
 
-`references.bib` contains one entry for each external `[A]` and `[B]` reading used in the module tables. Keys follow `lastname_shortword_year`; standards use an issuing body or `rfc` prefix. Every entry preserves evidence tier, priority, and module in `keywords`.
+[references.bib](references.bib) has one entry for each `[A]` and `[B]` source cited in the workshop decks or listed as a reading, plus the few `[C]` sources a deck uses as vocabulary (OWASP agentic threats, CSA MAESTRO). The decks read it with biblatex and biber.
 
-The [arXiv triage inventory](arxiv-triage.md) is the completeness check for identifiers carried from the proposal.
+- Keys follow `lastname_shortword_year`. Standards use the issuing body or an `rfc` prefix.
+- `keywords` carry the evidence tier and the workshop, for example `tier-A, workshop-2`.
+- Preprints are tagged `tier-A`, but their `note` says `Preprint; not peer reviewed`, and the slides add `\pre` after the citation.
+- `[C]` entries are cited on slides only with `\grey{key}`, which marks them as motivation and vocabulary only.
 
-Preprints remain tagged as `tier-A` for the repository's academic-work bucket but their `note` explicitly says `Preprint; not peer reviewed`. Verify author/title/version metadata before manuscript submission. Grey `[C]` items are deliberately excluded from BibTeX unless a manuscript uses them for motivation.
+Check author, title, and version metadata before a source appears on a final deck.

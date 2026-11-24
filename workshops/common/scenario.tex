@@ -1,0 +1,36 @@
+% The running scenario used in all three workshops (agentsim/world.py).
+% Optional scale: \def\scenarioscale{0.8} before \input.
+\providecommand{\scenarioscale}{1}
+\begin{tikzpicture}[scale=\scenarioscale, transform shape, >=Stealth,
+  ent/.style={draw=black!60, rounded corners=2pt, fill=white, minimum height=8mm, minimum width=19mm,
+              align=center, font=\scriptsize, inner sep=2pt},
+  org/.style={draw=#1, fill=#1!7, rounded corners=4pt, inner sep=5pt, thick},
+  orglabel/.style={font=\tiny\bfseries, text=#1},
+  hop/.style={->, thick, black!75},
+  side/.style={->, thick, dashed, #1}]
+  \node[ent] (alice) {Alice\\[-1pt]\tiny operator};
+  \node[ent, right=5mm of alice] (orch) {orchestrator\\[-1pt]\tiny agent};
+  \node[ent, right=12mm of orch] (xrf) {XRF analyzer\\[-1pt]\tiny agent};
+  \node[ent, right=12mm of xrf] (reg) {DPP registry\\[-1pt]\tiny MCP server};
+  \node[ent, below=5mm of reg, minimum width=16mm] (p1) {battery-001\\[-1pt]\tiny owned here};
+  \node[ent, below=2mm of p1, minimum width=16mm] (p2) {battery-002\\[-1pt]\tiny othermaker};
+  \node[ent, below=11mm of xrf, draw=orgbroker] (harv) {harvester\\[-1pt]\tiny broker agent};
+  \node[ent, below=11mm of orch] (inc) {incident agent\\[-1pt]\tiny regulator};
+  \begin{scope}[on background layer]
+    \node[org=orgrecycler, fit=(alice)(orch)] (recbox) {};
+    \node[org=orglab, fit=(xrf)] (labbox) {};
+    \node[org=orgmaker, fit=(reg)(p1)(p2)] (mkbox) {};
+    \node[org=orgbroker, fit=(harv), dashed] (brbox) {};
+    \node[org=orgregulator, fit=(inc)] (rgbox) {};
+  \end{scope}
+  \node[orglabel=orgrecycler, above=0pt of recbox] {recycler};
+  \node[orglabel=orglab, above=0pt of labbox] {lab};
+  \node[orglabel=orgmaker, above=0pt of mkbox] {manufacturer};
+  \node[orglabel=orgbroker, below=0pt of brbox] {broker (adversary)};
+  \node[orglabel=orgregulator, below=0pt of rgbox] {regulator};
+  \draw[hop] (alice) -- node[above, font=\tiny]{1} (orch);
+  \draw[hop] (orch) -- node[above, font=\tiny]{2} (xrf);
+  \draw[hop] (xrf) -- node[above, font=\tiny]{3} (reg);
+  \draw[black!50] (reg) -- (p1);
+  \draw[side=orgbroker] (harv.east) -- (harv.east -| mkbox.west);
+\end{tikzpicture}

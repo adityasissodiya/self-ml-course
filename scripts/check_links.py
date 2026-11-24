@@ -1,4 +1,4 @@
-"""Check local Markdown links and external URLs; write LINK_REPORT.md."""
+"""Check local Markdown links and external URLs; write build/link-report.md."""
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -17,11 +17,11 @@ except ImportError:  # The standard-library fallback keeps a fresh clone runnabl
 ROOT = Path(__file__).resolve().parents[1]
 URL_RE = re.compile(r"https?://[^\s<>\])}]+")
 MD_LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
-SKIP_DIRS = {".git", ".venv", "node_modules"}
+SKIP_DIRS = {".git", ".venv", "node_modules", "build"}
 
 
 def markdown_files():
-    return [p for p in ROOT.rglob("*.md") if p.name != "LINK_REPORT.md" and not any(part in SKIP_DIRS for part in p.parts)]
+    return [p for p in ROOT.rglob("*.md") if not any(part in SKIP_DIRS for part in p.parts)]
 
 
 def external_urls(files):
@@ -129,7 +129,8 @@ def main():
     lines += ["", "## Relative links", "", "| Source | Target | Verdict |", "|---|---|---|"]
     for source, target, exists in sorted(locals_):
         lines.append(f"| {source} | `{target}` | {'OK' if exists else 'FAIL'} |")
-    (ROOT / "LINK_REPORT.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (ROOT / "build").mkdir(exist_ok=True)
+    (ROOT / "build" / "link-report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"Link report: {len(bad_external)} external failures, {len(gated)} gated, {len(bad_local)} broken relative links")
     if bad_local:
         raise SystemExit(1)

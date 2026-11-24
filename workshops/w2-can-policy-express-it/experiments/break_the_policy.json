@@ -1,0 +1,10 @@
+[
+  {"name": "Example: the lab agent keeps access after Alice leaves the recycler",
+   "write": [["passport:battery-001", "delegate_materials", "agent:lab/xrf-analyzer"]],
+   "delete": [["organization:recycler", "member", "user:alice@recycler"]],
+   "user": "agent:lab/xrf-analyzer", "relation": "read_materials", "object": "passport:battery-001",
+   "expected": false},
+  {"name": "Example: a regulator's emergency agent during a battery fire",
+   "user": "agent:regulator/incident-response", "relation": "read_health", "object": "passport:battery-001",
+   "expected": true}
+]

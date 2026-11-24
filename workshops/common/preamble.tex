@@ -1,0 +1,63 @@
+% Shared Beamer setup for the three workshop decks.
+% Build with: python tasks.py slides w1   (or compile slides/wN.tex from the slides folder)
+%
+% Build variants (set by tasks.py through latexmk -usepretex):
+%   \finalbuild  hides PREP markers; tasks.py refuses a final build while any remain
+%   \withnotes   shows speaker notes on a second screen
+%   handout      beamer class option for the participant copy
+
+\usetheme[progressbar=frametitle, numbering=fraction, block=fill]{metropolis}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs, array, tabularx, pifont, xcolor, tikz, pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta, positioning, fit, backgrounds, calc}
+\usepackage[backend=biber, style=numeric-comp, sorting=none, maxbibnames=3, giveninits=true]{biblatex}
+\addbibresource{../../../bibliography/references.bib}
+\renewcommand*{\bibfont}{\tiny}
+\setbeamertemplate{bibliography item}{\insertbiblabel}
+
+\definecolor{okgreen}{HTML}{2E7D32}
+\definecolor{badred}{HTML}{C62828}
+\definecolor{warnamber}{HTML}{B26A00}
+\definecolor{tierAcol}{HTML}{1B5E20}
+\definecolor{tierBcol}{HTML}{0D47A1}
+\definecolor{tierCcol}{HTML}{6A1B9A}
+\definecolor{orgrecycler}{HTML}{00796B}
+\definecolor{orglab}{HTML}{1565C0}
+\definecolor{orgmaker}{HTML}{E65100}
+\definecolor{orgbroker}{HTML}{C62828}
+\definecolor{orgregulator}{HTML}{5D4037}
+\setbeamercolor{alerted text}{fg=badred}
+
+% Table marks used by generated results
+\newcommand{\cmark}{\textcolor{okgreen}{\ding{51}}}
+\newcommand{\xmark}{\textcolor{badred}{\ding{55}}}
+\newcommand{\pmark}{\textcolor{warnamber}{\textbf{$\sim$}}}
+
+% Evidence tiers (docs/evidence-policy.md): \ev{A}{key} prints a badge and a citation
+\newcommand{\tier}[1]{\tikz[baseline=(t.base)]\node[fill=tier#1col, text=white, font=\tiny\bfseries,
+  inner sep=1.1pt, rounded corners=1pt] (t) {#1};}
+\newcommand{\ev}[2]{\tier{#1}\,\cite{#2}}
+\newcommand{\pre}{{\tiny\itshape(preprint)}}
+\newcommand{\grey}[1]{\tier{C}\,\cite{#1}\,{\tiny\itshape motivation and vocabulary only}}
+
+% Preparation markers: visible while drafting, must be resolved before the final build
+\newcommand{\prep}[1]{\ifdefined\finalbuild\else{\setlength{\fboxsep}{1.5pt}%
+  \colorbox{warnamber!20}{\parbox{0.92\linewidth}{\tiny\textbf{PREP:} #1}}}\fi}
+
+\ifdefined\withnotes
+  \setbeameroption{show notes on second screen=right}
+\fi
+
+% Generated experiment output, with a visible fallback when it has not been run
+\newcommand{\result}[1]{\IfFileExists{../results/#1.tex}{\input{../results/#1.tex}}%
+  {\colorbox{badred!15}{\scriptsize Missing result \texttt{\detokenize{#1}}: run \texttt{python tasks.py run}}}}
+
+\newcommand{\discussion}[3]{% {number}{question}{readings}
+  \begin{frame}{Discussion #1}
+    \begin{alertblock}{Question for the room}\large #2\end{alertblock}
+    \vspace{2mm}{\small\textbf{Readings.} #3}
+  \end{frame}}
+
+\author{Aditya Sissodiya}
+\institute{Lule\aa{} University of Technology \quad\textperiodcentered\quad Agentic AI Security, Identity, and Access Control (7.5 ECTS)}

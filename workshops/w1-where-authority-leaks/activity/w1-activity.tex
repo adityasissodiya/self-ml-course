@@ -1,0 +1,50 @@
+\documentclass[10pt]{article}
+\input{../../common/activity-preamble.tex}
+
+\begin{document}
+\sheet{Workshop 1 activity: build the delegation chain}{Pairs, 30 minutes. Agentic AI Security, Identity, and Access Control.}
+
+\textbf{The job.} Alice (recycler) asks her orchestrator agent to analyse battery-001. The orchestrator hands the job to the lab's XRF agent, which reads the passport from the manufacturer's registry.
+
+\textbf{Identifiers you can use}
+
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Alice & \texttt{user:alice@recycler} \\
+Orchestrator & \texttt{agent:recycler/orchestrator} \\
+XRF agent & \texttt{agent:lab/xrf-analyzer} \\
+Registry (resource) & \texttt{https://registry.manufacturer.example/mcp} \\
+Authorization servers & \texttt{https://as.recycler.example}, \texttt{https://as.manufacturer.example} \\
+Scopes & \texttt{dpp:read:identity}, \texttt{dpp:read:materials}, \texttt{dpp:read:health}, \texttt{dpp:read:suppliers} \\
+\bottomrule
+\end{tabularx}
+
+\bigskip
+\textbf{1. Fill in one token per hop}
+
+\renewcommand{\arraystretch}{2.4}
+\begin{tabularx}{\textwidth}{@{}L{2.7cm} X X X X X@{}}
+\toprule
+\textbf{Hop} & \textbf{Issuer} & \textbf{Subject (sub)} & \textbf{Actor (act)} & \textbf{Audience (aud)} & \textbf{Scope} \\
+\midrule
+1 Alice $\to$ orchestrator & & & & & \\
+2 orchestrator $\to$ XRF agent & & & & & \\
+3 XRF agent $\to$ registry & & & & & \\
+\bottomrule
+\end{tabularx}
+\renewcommand{\arraystretch}{1}
+
+\bigskip
+\textbf{2. Check it.} Copy your answers into \texttt{experiments/chain.json} and run
+
+\texttt{python e3\_delegation\_chain.py -{}-check chain.json}
+
+\bigskip
+\textbf{3. Answer together}
+\begin{enumerate}
+  \item At which hop does Alice's authority stop being visible to the registry's decision? \blank[5cm]
+  \item Which hop could widen the scope, and who would have to refuse it? \blank[6cm]
+  \item Alice changes her mind. Who can revoke hop 2, and does the registry find out? \blank[4.5cm]
+  \item Would impersonation instead of delegation change any of your answers? \blank[5.5cm]
+\end{enumerate}
+\end{document}

@@ -1,0 +1,11 @@
+% Shared setup for the printable participant activity sheets (A4, one or two pages).
+\usepackage[a4paper, margin=18mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern, booktabs, array, tabularx, xcolor, enumitem, parskip}
+\usepackage[hidelinks]{hyperref}
+\renewcommand{\familydefault}{\sfdefault}
+\setlist{nosep, leftmargin=*}
+\pagestyle{empty}
+\newcommand{\blank}[1][2.6cm]{\rule{#1}{0.3pt}}
+\newcommand{\sheet}[2]{{\Large\bfseries #1}\par\smallskip{\small #2}\par\medskip\hrule\medskip}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}

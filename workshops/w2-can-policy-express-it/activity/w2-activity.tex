@@ -1,0 +1,55 @@
+\documentclass[10pt]{article}
+\input{../../common/activity-preamble.tex}
+
+\begin{document}
+\sheet{Workshop 2 activity: break the policy}{Pairs, 30 minutes. Agentic AI Security, Identity, and Access Control.}
+
+\textbf{The model, in short.} Each passport field has a read relation. Members of stakeholder organizations related to the passport inherit it. Agents get access only through \texttt{delegate\_<field>} tuples.
+
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+\textbf{Field} & \textbf{Who may read it} \\
+\midrule
+identity & everyone (public) \\
+materials & members of the owner, recycler, or regulator organizations; delegated agents \\
+health & members of the owner, recycler, or repairer organizations; delegated agents \\
+repair & members of the owner or repairer organizations; delegated agents \\
+suppliers & members of the owner organization; delegated agents \\
+\bottomrule
+\end{tabularx}
+
+\medskip
+\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}X@{}}
+People & \texttt{user:alice@recycler}, \texttt{user:carol@manufacturer}, \texttt{user:mallory@broker} \\
+Agents & \texttt{agent:recycler/orchestrator}, \texttt{agent:lab/xrf-analyzer}, \texttt{agent:broker/harvester}, \texttt{agent:regulator/incident-response} \\
+Passports & \texttt{passport:battery-001} (manufacturer), \texttt{passport:battery-002} (othermaker) \\
+Tuples & \texttt{[object, relation, user]}, e.g.\ \texttt{["organization:recycler", "member", "user:alice@recycler"]} \\
+\end{tabularx}
+
+\bigskip
+\textbf{1. Write requests you think the model gets wrong}
+
+\renewcommand{\arraystretch}{2.6}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}X L{2.4cm} L{3cm} L{2.6cm} L{1.6cm}@{}}
+\toprule
+\textbf{Situation (tuples to write or delete first)} & \textbf{User} & \textbf{Relation} & \textbf{Object} & \textbf{Right answer} \\
+\midrule
+ & & & & \\
+ & & & & \\
+ & & & & \\
+\bottomrule
+\end{tabularx}
+\renewcommand{\arraystretch}{1}
+
+\bigskip
+\textbf{2. Run them.} Add them to \texttt{experiments/break\_the\_policy.json} (keys: \texttt{name}, \texttt{write}, \texttt{delete}, \texttt{user}, \texttt{relation}, \texttt{object}, and \texttt{expected}, which is \texttt{true} for allow) and run \texttt{python hands\_on.py break\_the\_policy.json}.
+
+\bigskip
+\textbf{3. Classify each disagreement}
+
+\begin{enumerate}
+  \item A missing tuple (the model could say it; nobody wrote it): \blank[6cm]
+  \item A modelling choice (the model says it; we would say it differently): \blank[5cm]
+  \item A limit of the model (it cannot be said in a single relationship check): \blank[4.5cm]
+\end{enumerate}
+\end{document}

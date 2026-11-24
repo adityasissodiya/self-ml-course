@@ -1,7 +1,0 @@
-[
-  {"name": "owner member reads", "user": "user:alice", "relation": "can_read", "object": "passport:battery-001", "expected": true},
-  {"name": "explicit delegated agent reads", "user": "agent:recycler-tool", "relation": "can_read", "object": "passport:battery-001", "expected": true},
-  {"name": "unknown user denied", "user": "user:mallory", "relation": "can_read", "object": "passport:battery-001", "expected": false},
-  {"name": "other agent denied", "user": "agent:untrusted", "relation": "can_read", "object": "passport:battery-001", "expected": false}
-]
-
